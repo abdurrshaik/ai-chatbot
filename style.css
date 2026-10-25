@@ -1,0 +1,312 @@
+```css
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #202123;
+}
+
+.app {
+    display: flex;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    flex: 0 0 270px;
+    background: #202123;
+    color: white;
+    padding: 20px;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.new-chat {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #565869;
+    border-radius: 8px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.new-chat:hover {
+    background: #343541;
+}
+
+.sidebar p {
+    margin-top: 20px;
+}
+
+/* Main chat area */
+.main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    flex-shrink: 0;
+    padding: 20px;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Messages area */
+.messages {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    padding: 25px;
+}
+
+.welcome {
+    text-align: center;
+    margin: auto 0;
+}
+
+.welcome h1 {
+    font-size: 32px;
+}
+
+.welcome p {
+    color: #6b7280;
+}
+
+/* Individual messages */
+.message {
+    display: block;
+    width: fit-content;
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.user-message {
+    align-self: flex-end;
+    background: #4f46e5;
+    color: white;
+}
+
+.bot-message {
+    align-self: flex-start;
+    background: #e5e7eb;
+    color: #111827;
+}
+
+/* Input area */
+.input-area {
+    flex-shrink: 0;
+    padding: 20px;
+    background: #f5f7fb;
+}
+
+.chat-form {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+}
+
+.chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+    font-size: 16px;
+}
+
+.chat-input:focus {
+    border-color: #6366f1;
+}
+
+.send-button {
+    padding: 0 22px;
+    border: none;
+    border-radius: 12px;
+    background: #4f46e5;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.send-button:hover {
+    background: #4338ca;
+}
+
+.disclaimer {
+    max-width: 900px;
+    margin: 15px auto 0;
+    font-size: 14px;
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+    .sidebar {
+        flex: 0 0 90px;
+        padding: 12px;
+    }
+
+    .logo {
+        font-size: 15px;
+        overflow-wrap: anywhere;
+    }
+
+    .new-chat {
+        font-size: 12px;
+        padding: 8px 4px;
+    }
+
+    .sidebar p {
+        font-size: 12px;
+        overflow-wrap: anywhere;
+    }
+
+    .messages {
+        padding: 15px 10px;
+    }
+
+    .welcome h1 {
+        font-size: 24px;
+    }
+
+    .input-area {
+        padding: 12px;
+    }
+
+    .chat-input {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .send-button {
+        padding: 0 14px;
+    }
+
+    .message {
+        max-width: 95%;
+    }
+}
+```
+/* Mobile-friendly design */
+@media screen and (max-width: 600px) {
+
+```
+.app {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 85px;
+    min-width: 85px;
+    padding: 10px 6px;
+    overflow: hidden;
+}
+
+.logo {
+    font-size: 13px;
+    line-height: 1.4;
+    text-align: center;
+    overflow-wrap: anywhere;
+    margin-bottom: 20px;
+}
+
+.sidebar p {
+    font-size: 11px;
+    text-align: center;
+}
+
+.new-chat {
+    font-size: 11px;
+    padding: 10px 3px;
+    overflow-wrap: anywhere;
+}
+
+.header {
+    padding: 16px 12px;
+    font-size: 16px;
+}
+
+.messages {
+    padding: 16px 10px;
+    min-height: 0;
+}
+
+.welcome {
+    margin-top: 50px;
+}
+
+.welcome h1 {
+    font-size: 23px;
+}
+
+.welcome p {
+    font-size: 14px;
+}
+
+.message {
+    max-width: 95%;
+    font-size: 14px;
+    padding: 10px 12px;
+}
+
+.input-area {
+    padding: 10px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+}
+
+.chat-form {
+    gap: 6px;
+}
+
+.chat-input {
+    width: 0;
+    font-size: 16px;
+    padding: 12px 10px;
+}
+
+.send-button {
+    padding: 0 14px;
+    font-size: 14px;
+}
+
+.input-area > p {
+    font-size: 11px;
+    line-height: 1.4;
+}
+```
+
+}
