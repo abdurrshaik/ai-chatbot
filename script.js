@@ -52,7 +52,6 @@ form.addEventListener("submit", async function (event) {
     input.focus();
 
     const reply = displayMessage("Thinking...", "bot");
-
     const sendButton = form.querySelector('button[type="submit"]');
 
     if (sendButton) {
@@ -70,11 +69,31 @@ form.addEventListener("submit", async function (event) {
             })
         });
 
-        const data = await response.json();
+        // Read the response as text first.
+        // This safely handles Cloudflare errors such as HTTP 524.
+        const responseText = await response.text();
+
+        let data;
+
+        try {
+            data = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error(
+                "Invalid server response:",
+                response.status,
+                responseText
+            );
+
+            throw new Error(
+                response.status === 524
+                    ? "The AI service took too long to respond (timeout). Please try again later."
+                    : `The server returned an invalid response (HTTP ${response.status}). Please try again.`
+            );
+        }
 
         if (!response.ok) {
             throw new Error(
-                data.error || "The AI service could not answer."
+                data.error || `The AI service returned HTTP ${response.status}.`
             );
         }
 
@@ -84,10 +103,12 @@ form.addEventListener("submit", async function (event) {
 
         reply.textContent = data.reply;
 
-   } catch (error) {
-    console.error("AI CHATBOT ERROR:", error);
-    reply.textContent = error.message || "Sorry, I couldn't connect to the AI service.";
-} finally {
+    } catch (error) {
+        console.error("AI CHATBOT ERROR:", error);
+        reply.textContent =
+            error.message ||
+            "Sorry, I couldn't connect to the AI service. Please try again.";
+    } finally {
         if (sendButton) {
             sendButton.disabled = false;
         }
