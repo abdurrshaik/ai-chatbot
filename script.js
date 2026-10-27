@@ -5,12 +5,14 @@ const messages = document.getElementById("messages");
 const newChatBtn = document.getElementById("newChatBtn");
 
 
-console.log("SCRIPT LOADED SUCCESSFULLY");
+console.log("AI CHATBOT LOADED SUCCESSFULLY");
 
 if (!form || !input || !messages) {
     console.error("ERROR: HTML elements were not found!");
     return;
 }
+
+const API_URL = "https://my-ai-chatbot-api.abdurrshaik.workers.dev/";
 
 function displayMessage(text, type) {
     const message = document.createElement("div");
@@ -29,7 +31,7 @@ function displayMessage(text, type) {
     return message;
 }
 
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const text = input.value.trim();
@@ -51,30 +53,53 @@ form.addEventListener("submit", function (event) {
 
     const reply = displayMessage("Thinking...", "bot");
 
-    setTimeout(function () {
-        const question = text.toLowerCase();
-        let answer;
+    const sendButton = form.querySelector('button[type="submit"]');
 
-        if (/^(hi|hello|hey)[!. ]*$/.test(question)) {
-            answer = "Hello! 👋 Welcome to AI Chatbot. How can I help you?";
-        } else if (question.includes("how are you")) {
-            answer = "I'm working correctly! 😊 What would you like to learn today?";
-        } else if (question.includes("your name")) {
-            answer = "I'm AI Chatbot, your virtual assistant!";
-        } else if (question.includes("python")) {
-            answer = "Python is a programming language used in AI, automation, and web development.";
-        } else if (question.includes("what is ai") || question.includes("artificial intelligence")) {
-            answer = "Artificial Intelligence (AI) enables computers to perform tasks that usually require human intelligence.";
-        } else if (question.includes("thank")) {
-            answer = "You're welcome! 😊";
-        } else {
-            answer = "Your message was received: " + text +
-                "\n\nI'm currently running in demo mode. To answer this question intelligently, I need to be connected to a real AI service.";
+    if (sendButton) {
+        sendButton.disabled = true;
+    }
+
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: text
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.error || "The AI service could not answer."
+            );
         }
 
-        reply.textContent = answer;
+        if (typeof data.reply !== "string" || !data.reply.trim()) {
+            throw new Error("The AI returned an empty response.");
+        }
+
+        reply.textContent = data.reply;
+
+    } catch (error) {
+        console.error("AI CHATBOT ERROR:", error);
+
+        reply.textContent =
+            "Sorry, I couldn't connect to the AI service. " +
+            "Please try again. If the problem continues, the API " +
+            "may need troubleshooting.";
+
+    } finally {
+        if (sendButton) {
+            sendButton.disabled = false;
+        }
+
         messages.scrollTop = messages.scrollHeight;
-    }, 500);
+        input.focus();
+    }
 });
 
 if (newChatBtn) {
