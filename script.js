@@ -84,15 +84,10 @@ form.addEventListener("submit", async function (event) {
 
         reply.textContent = data.reply;
 
-    } catch (error) {
-        console.error("AI CHATBOT ERROR:", error);
-
-        reply.textContent =
-            "Sorry, I couldn't connect to the AI service. " +
-            "Please try again. If the problem continues, the API " +
-            "may need troubleshooting.";
-
-    } finally {
+   } catch (error) {
+    console.error("AI CHATBOT ERROR:", error);
+    reply.textContent = error.message || "Sorry, I couldn't connect to the AI service.";
+} finally {
         if (sendButton) {
             sendButton.disabled = false;
         }
