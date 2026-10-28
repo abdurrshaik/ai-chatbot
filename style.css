@@ -451,3 +451,105 @@ padding: 8px 2px;
 
 
 }
+/* Header menu button */
+.header {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+
+.sidebar-toggle {
+width: 42px;
+height: 42px;
+flex-shrink: 0;
+border: none;
+border-radius: 8px;
+background: transparent;
+color: #202123;
+font-size: 25px;
+cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+background: #e5e7eb;
+}
+
+/* Smooth sidebar animation */
+.sidebar {
+overflow-y: auto;
+overflow-x: hidden;
+transition: margin-left 0.25s ease, transform 0.25s ease;
+}
+
+/* Desktop: hide sidebar when closed */
+.app.sidebar-closed .sidebar {
+margin-left: -270px;
+}
+
+/* Mobile sidebar */
+@media screen and (max-width: 600px) {
+.app.sidebar-closed .sidebar {
+margin-left: -85px;
+}
+
+
+.app:not(.sidebar-closed) .sidebar {
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 270px;
+    min-width: 270px;
+    padding: 20px;
+    margin-left: 0;
+    overflow-y: auto;
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.25);
+}
+
+.app:not(.sidebar-closed) .logo {
+    font-size: 21px;
+    text-align: left;
+}
+
+.app:not(.sidebar-closed) .sidebar p {
+    font-size: 14px;
+    text-align: left;
+}
+
+.app:not(.sidebar-closed) .new-chat {
+    font-size: 14px;
+    padding: 12px;
+}
+
+.app:not(.sidebar-closed) .history-item {
+    font-size: 13px;
+    padding: 10px 6px;
+}
+
+.app:not(.sidebar-closed) .history-heading {
+    font-size: 13px;
+}
+
+.app:not(.sidebar-closed) .delete-history {
+    padding: 5px 8px;
+    font-size: 18px;
+}
+
+
+}
+
+/* Background overlay on mobile */
+.sidebar-overlay {
+display: none;
+}
+
+@media screen and (max-width: 600px) {
+.sidebar-overlay.visible {
+display: block;
+position: fixed;
+z-index: 1000;
+inset: 0;
+background: rgba(0, 0, 0, 0.55);
+}
+}
