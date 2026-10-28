@@ -101,8 +101,7 @@ form.addEventListener("submit", async function (event) {
             throw new Error("The AI returned an empty response.");
         }
 
-        reply.textContent = data.reply;
-
+        reply.innerHTML = DOMPurify.sanitize(marked.parse(data.reply));
     } catch (error) {
         console.error("AI CHATBOT ERROR:", error);
         reply.textContent =
