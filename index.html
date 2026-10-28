@@ -5,17 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
+```
 <title>AI Chatbot</title>
 <link rel="stylesheet" href="./style.css">
-
+```
 
 </head>
 
 <body>
 <div class="app">
 
-
+```
 <aside class="sidebar">
     <div class="logo">🤖 AI Chatbot</div>
 
@@ -27,17 +27,18 @@
 </aside>
 
 <main class="main">
-    <header class="header">
-    <button
-        type="button"
-        class="sidebar-toggle"
-        id="sidebarToggle"
-        aria-label="Toggle sidebar"
-        aria-expanded="true"
-    >☰</button>
 
-    <span>AI Assistant</span>
-</header>
+    <header class="header">
+        <button
+            type="button"
+            class="sidebar-toggle"
+            id="sidebarToggle"
+            aria-label="Toggle sidebar"
+            aria-expanded="true"
+        >☰</button>
+
+        <span>AI Assistant</span>
+    </header>
 
     <section class="messages" id="messages">
         <div class="welcome" id="welcome">
@@ -47,8 +48,67 @@
     </section>
 
     <footer class="input-area">
+
         <form class="chat-form" id="chatForm">
 
+            <!-- Attachment button and menu -->
+            <div class="attachment-wrapper">
+
+                <button
+                    type="button"
+                    class="attach-button"
+                    id="attachBtn"
+                    aria-label="Add attachments"
+                    aria-expanded="false"
+                >+</button>
+
+                <div
+                    class="attachment-menu"
+                    id="attachmentMenu"
+                    hidden
+                >
+                    <button type="button" id="cameraOption">
+                        📷 Camera
+                    </button>
+
+                    <button type="button" id="photosOption">
+                        🖼️ Photos
+                    </button>
+
+                    <button type="button" id="filesOption">
+                        📁 Files
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Camera input -->
+            <input
+                type="file"
+                id="cameraInput"
+                accept="image/*"
+                capture="environment"
+                hidden
+            >
+
+            <!-- Photo gallery input -->
+            <input
+                type="file"
+                id="photosInput"
+                accept="image/*"
+                multiple
+                hidden
+            >
+
+            <!-- File picker input -->
+            <input
+                type="file"
+                id="filesInput"
+                multiple
+                hidden
+            >
+
+            <!-- Message box -->
             <textarea
                 class="chat-input"
                 id="userInput"
@@ -58,6 +118,7 @@
                 required
             ></textarea>
 
+            <!-- Send button -->
             <button type="submit" class="send-button">
                 Send
             </button>
@@ -67,9 +128,11 @@
         <p class="disclaimer">
             AI can make mistakes. Check important information.
         </p>
-    </footer>
-</main>
 
+    </footer>
+
+</main>
+```
 
 </div>
 
