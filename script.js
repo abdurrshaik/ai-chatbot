@@ -14,22 +14,60 @@ if (!form || !input || !messages) {
 
 const API_URL = "https://my-ai-chatbot-api.abdurrshaik.workers.dev/";
 
+// Display a message in the chat.
 function displayMessage(text, type) {
     const message = document.createElement("div");
     message.classList.add("message");
 
     if (type === "user") {
         message.classList.add("user-message");
+        // Preserve line breaks in the user's message safely.
+        message.textContent = text;
     } else {
         message.classList.add("bot-message");
+
+        // Format the AI's Markdown response safely.
+        if (
+            typeof marked !== "undefined" &&
+            typeof DOMPurify !== "undefined"
+        ) {
+            message.innerHTML = DOMPurify.sanitize(
+                marked.parse(text)
+            );
+        } else {
+            message.textContent = text;
+            console.error("Markdown libraries did not load.");
+        }
     }
 
-    message.textContent = text;
     messages.appendChild(message);
     messages.scrollTop = messages.scrollHeight;
 
     return message;
 }
+
+// Automatically grow the textarea as the user types.
+function resizeInput() {
+    input.style.height = "auto";
+    input.style.height = Math.min(input.scrollHeight, 180) + "px";
+}
+
+input.addEventListener("input", resizeInput);
+
+// Enter sends. Shift + Enter adds a new line.
+input.addEventListener("keydown", function (event) {
+    if (
+        event.key === "Enter" &&
+        !event.shiftKey &&
+        !event.isComposing
+    ) {
+        event.preventDefault();
+
+        if (typeof form.requestSubmit === "function") {
+            form.requestSubmit();
+        }
+    }
+});
 
 form.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -46,9 +84,11 @@ form.addEventListener("submit", async function (event) {
         welcome.remove();
     }
 
+    // Display the user's message, preserving code line breaks.
     displayMessage(text, "user");
 
     input.value = "";
+    resizeInput();
     input.focus();
 
     const reply = displayMessage("Thinking...", "bot");
@@ -57,6 +97,8 @@ form.addEventListener("submit", async function (event) {
     if (sendButton) {
         sendButton.disabled = true;
     }
+
+    input.disabled = true;
 
     try {
         const response = await fetch(API_URL, {
@@ -69,10 +111,7 @@ form.addEventListener("submit", async function (event) {
             })
         });
 
-        // Read the response as text first.
-        // This safely handles Cloudflare errors such as HTTP 524.
         const responseText = await response.text();
-
         let data;
 
         try {
@@ -86,24 +125,39 @@ form.addEventListener("submit", async function (event) {
 
             throw new Error(
                 response.status === 524
-                    ? "The AI service took too long to respond (timeout). Please try again later."
+                    ? "The AI service took too long to respond. Please try again later."
                     : `The server returned an invalid response (HTTP ${response.status}). Please try again.`
             );
         }
 
         if (!response.ok) {
             throw new Error(
-                data.error || `The AI service returned HTTP ${response.status}.`
+                data.error ||
+                `The AI service returned HTTP ${response.status}.`
             );
         }
 
-        if (typeof data.reply !== "string" || !data.reply.trim()) {
+        if (
+            typeof data.reply !== "string" ||
+            !data.reply.trim()
+        ) {
             throw new Error("The AI returned an empty response.");
         }
 
-        reply.innerHTML = DOMPurify.sanitize(marked.parse(data.reply));
+        // Render the AI response with safe Markdown formatting.
+        if (
+            typeof marked !== "undefined" &&
+            typeof DOMPurify !== "undefined"
+        ) {
+            reply.innerHTML = DOMPurify.sanitize(
+                marked.parse(data.reply)
+            );
+        } else {
+            reply.textContent = data.reply;
+        }
     } catch (error) {
         console.error("AI CHATBOT ERROR:", error);
+
         reply.textContent =
             error.message ||
             "Sorry, I couldn't connect to the AI service. Please try again.";
@@ -112,11 +166,13 @@ form.addEventListener("submit", async function (event) {
             sendButton.disabled = false;
         }
 
+        input.disabled = false;
         messages.scrollTop = messages.scrollHeight;
         input.focus();
     }
 });
 
+// Start a new chat.
 if (newChatBtn) {
     newChatBtn.addEventListener("click", function () {
         messages.innerHTML = "";
@@ -136,6 +192,7 @@ if (newChatBtn) {
         messages.appendChild(welcome);
 
         input.value = "";
+        resizeInput();
         input.focus();
     });
 }
