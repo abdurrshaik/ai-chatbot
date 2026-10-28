@@ -2,6 +2,94 @@ document.addEventListener("DOMContentLoaded", function () {
 const form = document.getElementById("chatForm");
 const input = document.getElementById("userInput");
 const messages = document.getElementById("messages");
+
+// Attachment menu
+const attachBtn = document.getElementById("attachBtn");
+const attachmentMenu = document.getElementById("attachmentMenu");
+
+const cameraInput = document.getElementById("cameraInput");
+const photosInput = document.getElementById("photosInput");
+const filesInput = document.getElementById("filesInput");
+
+const cameraOption = document.getElementById("cameraOption");
+const photosOption = document.getElementById("photosOption");
+const filesOption = document.getElementById("filesOption");
+
+function closeAttachmentMenu() {
+    if (!attachmentMenu || !attachBtn) return;
+
+    attachmentMenu.hidden = true;
+    attachBtn.setAttribute("aria-expanded", "false");
+}
+
+if (attachBtn && attachmentMenu) {
+    attachBtn.addEventListener("click", function (event) {
+        event.stopPropagation();
+
+        attachmentMenu.hidden = !attachmentMenu.hidden;
+
+        attachBtn.setAttribute(
+            "aria-expanded",
+            String(!attachmentMenu.hidden)
+        );
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".attachment-wrapper")) {
+            closeAttachmentMenu();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeAttachmentMenu();
+        }
+    });
+}
+
+if (cameraOption && cameraInput) {
+    cameraOption.addEventListener("click", function () {
+        closeAttachmentMenu();
+        cameraInput.click();
+    });
+}
+
+if (photosOption && photosInput) {
+    photosOption.addEventListener("click", function () {
+        closeAttachmentMenu();
+        photosInput.click();
+    });
+}
+
+if (filesOption && filesInput) {
+    filesOption.addEventListener("click", function () {
+        closeAttachmentMenu();
+        filesInput.click();
+    });
+}
+
+function showSelectedFiles(fileInput) {
+    if (!fileInput || !fileInput.files.length) return;
+
+    const names = Array.from(fileInput.files)
+        .map(file => file.name)
+        .join(", ");
+
+    alert(
+        "Selected: " + names +
+        "\n\nFile upload and AI attachment processing are not connected yet."
+    );
+}
+
+[cameraInput, photosInput, filesInput].forEach(function (fileInput) {
+    if (fileInput) {
+        fileInput.addEventListener("change", function () {
+            showSelectedFiles(fileInput);
+        });
+    }
+});
+
+
 const newChatBtn = document.getElementById("newChatBtn");
 const sidebar = document.querySelector(".sidebar");
 const sidebarToggle = document.getElementById("sidebarToggle");
