@@ -4,7 +4,8 @@ const input = document.getElementById("userInput");
 const messages = document.getElementById("messages");
 const newChatBtn = document.getElementById("newChatBtn");
 const sidebar = document.querySelector(".sidebar");
-
+const sidebarToggle = document.getElementById("sidebarToggle");
+const app = document.querySelector(".app");
 
 if (!form || !input || !messages) {
     console.error("Chatbot HTML elements were not found.");
@@ -13,7 +14,83 @@ if (!form || !input || !messages) {
 
 const API_URL = "https://my-ai-chatbot-api.abdurrshaik.workers.dev/";
 const STORAGE_KEY = "aiChatbotConversationsV1";
+// Sidebar open/close functionality
+let sidebarOverlay = document.querySelector(".sidebar-overlay");
 
+if (!sidebarOverlay) {
+    sidebarOverlay = document.createElement("div");
+    sidebarOverlay.className = "sidebar-overlay";
+    document.body.appendChild(sidebarOverlay);
+}
+
+function closeSidebar() {
+    if (!app) return;
+
+    app.classList.add("sidebar-closed");
+
+    if (sidebarOverlay) {
+        sidebarOverlay.classList.remove("visible");
+    }
+
+    if (sidebarToggle) {
+        sidebarToggle.setAttribute("aria-expanded", "false");
+    }
+}
+
+function openSidebar() {
+    if (!app) return;
+
+    app.classList.remove("sidebar-closed");
+
+    if (window.innerWidth <= 600 && sidebarOverlay) {
+        sidebarOverlay.classList.add("visible");
+    }
+
+    if (sidebarToggle) {
+        sidebarToggle.setAttribute("aria-expanded", "true");
+    }
+}
+
+if (sidebarToggle) {
+    sidebarToggle.addEventListener("click", function () {
+        if (app.classList.contains("sidebar-closed")) {
+            openSidebar();
+        } else {
+            closeSidebar();
+        }
+    });
+}
+
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener("click", closeSidebar);
+}
+
+// Start with the sidebar open on desktop and closed on mobile.
+if (window.innerWidth <= 600) {
+    closeSidebar();
+} else {
+    openSidebar();
+}
+
+// Close the mobile sidebar after selecting a conversation.
+window.addEventListener("resize", function () {
+    if (window.innerWidth > 600) {
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.remove("visible");
+        }
+
+        if (sidebarToggle) {
+            sidebarToggle.setAttribute(
+                "aria-expanded",
+                String(!app.classList.contains("sidebar-closed"))
+            );
+        }
+    } else if (app && !app.classList.contains("sidebar-closed")) {
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.add("visible");
+        }
+    }
+});
 let conversations = loadConversations();
 let activeChatId = null;
 let isSending = false;
@@ -118,8 +195,13 @@ function openConversation(chatId) {
         });
     }
 
-    renderHistory();
-    input.focus();
+  renderHistory();
+
+if (window.innerWidth <= 600) {
+    closeSidebar();
+}
+
+input.focus();  
 }
 
 // Add a new conversation.
