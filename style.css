@@ -694,3 +694,21 @@ gap: 7px;
 
 
 }
+/* Fix: completely hide the closed sidebar */
+
+.app.sidebar-closed .sidebar {
+display: none !important;
+}
+
+.app.sidebar-closed .main {
+width: 100% !important;
+min-width: 0 !important;
+flex: 1 1 100% !important;
+}
+
+/* Keep the sidebar available when opened on mobile */
+@media (max-width: 600px) {
+.app:not(.sidebar-closed) .sidebar {
+display: flex !important;
+}
+}
