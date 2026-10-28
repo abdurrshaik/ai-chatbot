@@ -712,3 +712,129 @@ flex: 1 1 100% !important;
 display: flex !important;
 }
 }
+/* ===== FIX MOBILE SIDEBAR ===== */
+
+@media (max-width: 600px) {
+
+
+/* Keep the sidebar at a consistent width */
+.app:not(.sidebar-closed) .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 85vw !important;
+
+    height: 100vh !important;
+    height: 100dvh !important;
+
+    box-sizing: border-box !important;
+    padding: 24px 18px !important;
+    margin: 0 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+
+    flex-shrink: 0 !important;
+    z-index: 1001 !important;
+}
+
+/* Prevent sidebar content from becoming too narrow */
+.sidebar .logo {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+
+    font-size: 23px !important;
+    line-height: 1.4 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+}
+
+/* Fix the New Chat button */
+.sidebar .new-chat {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+}
+
+/* Fix sidebar description */
+.sidebar > p {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+}
+
+/* Keep chat history inside the sidebar */
+.sidebar .history-heading {
+    margin: 8px 0 0 !important;
+    white-space: nowrap !important;
+}
+
+.sidebar .chat-history {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 6px !important;
+}
+
+.sidebar .history-row {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.sidebar .history-item {
+    flex: 1 !important;
+    min-width: 0 !important;
+
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+}
+
+.sidebar .delete-history {
+    flex-shrink: 0 !important;
+}
+
+.sidebar .empty-history {
+    width: 100% !important;
+    line-height: 1.5 !important;
+    overflow-wrap: break-word !important;
+}
+
+/* Keep the chat page in the correct position */
+.app .main {
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
+/* Closed sidebar must disappear completely */
+.app.sidebar-closed .sidebar {
+    display: none !important;
+}
+
+
+}
