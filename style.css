@@ -1130,3 +1130,52 @@ overflow: hidden;
         max-width: calc(100% - 20px);
     }
 }
+
+/* Sidebar toggle behavior */
+
+.app {
+    display: flex;
+    min-width: 0;
+}
+
+.sidebar {
+    flex: 0 0 290px;
+    width: 290px;
+    min-width: 0;
+    transition: width 0.25s ease, flex-basis 0.25s ease;
+}
+
+.main {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* Desktop: hide the sidebar when closed */
+.app:not(.sidebar-visible) .sidebar {
+    flex-basis: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+/* Keep the sidebar visible when open */
+.app.sidebar-visible .sidebar {
+    flex-basis: 290px;
+    width: 290px;
+}
+
+/* Toggle button */
+#sidebarToggle {
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        flex-basis: 0;
+        width: 0;
+    }
+
+    .app.sidebar-visible .sidebar {
+        flex-basis: 250px;
+        width: 250px;
+    }
+}
