@@ -1286,19 +1286,49 @@ overflow: hidden;
     flex: 0 0 auto;
 }/* ===== ATTACHMENT MENU ===== */
 
-#attachmentMenu {
+/* ==================================
+   AI CHATBOT ATTACHMENT MENU FIX
+================================== */
+
+.attachment-wrapper {
+    position: relative;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+}
+
+/* Plus button */
+.attach-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+/* Attachment menu: hidden until + is clicked */
+.attachment-menu[hidden] {
+    display: none !important;
+}
+
+/* Vertical attachment menu */
+.attachment-menu:not([hidden]) {
     position: absolute;
     left: 0;
-    bottom: calc(100% + 8px);
+    bottom: calc(100% + 10px);
     z-index: 1000;
 
+    display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
 
     width: 150px;
-    max-width: calc(100vw - 30px);
     padding: 10px;
+    box-sizing: border-box;
 
     background: #ffffff;
     border: 1px solid #e5e7eb;
@@ -1306,41 +1336,54 @@ overflow: hidden;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* Stack the three attachment buttons vertically */
-#attachmentMenu button,
-#cameraOption,
-#photosOption,
-#filesOption {
+/* Camera, Photos, and Files */
+.attachment-menu button {
+    display: block;
     width: 100%;
     min-height: 42px;
     margin: 0;
-    box-sizing: border-box;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #4f46e5;
+    color: #ffffff;
+    text-align: left;
+    cursor: pointer;
 }
 
-/* Keep the plus button beside the input */
-#attachBtn {
-    position: relative;
-    flex: 0 0 48px;
-    width: 48px;
-    height: 48px;
-    margin: 0;
+.attachment-menu button:hover {
+    background: #4338ca;
 }
 
-/* Keep the input and Send button on one line */
-#chatForm {
+/* Keep +, input, and Send aligned */
+.chat-form {
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
     gap: 10px;
+    min-width: 0;
 }
 
-#userInput {
+.chat-input {
     flex: 1 1 auto;
     min-width: 0;
 }
 
-#chatForm button[type="submit"] {
+.send-button {
     flex: 0 0 auto;
+}
+
+@media (max-width: 600px) {
+    .attachment-wrapper {
+        flex-basis: 42px;
+        width: 42px;
+        height: 42px;
+    }
+
+    .attach-button {
+        width: 42px;
+        height: 42px;
+    }
 }
 /* ===== HEADER ALIGNMENT ===== */
 
