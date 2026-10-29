@@ -14,9 +14,11 @@ import {
     getDocs,
     query,
     orderBy,
-    serverTimestamp
+    serverTimestamp,
+    doc,
+    setDoc,
+    deleteDoc
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
-
 const firebaseConfig = {
     apiKey: "AIzaSyDR-Z5gWkWEwI-x-w04vbNHDvt5mZzPzuM",
     authDomain: "ai-chatbot-93b9e.firebaseapp.com",
