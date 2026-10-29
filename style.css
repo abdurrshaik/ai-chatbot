@@ -1055,3 +1055,78 @@ overflow: hidden;
         height: 48px;
     }
 }
+/* ===== FIX CHAT INPUT ALIGNMENT ===== */
+
+.chat-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+#attachBtn {
+    position: relative;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Keep the message input on the same line */
+#userInput {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* Keep the Send button on the same line */
+#chatForm button[type="submit"] {
+    flex: 0 0 auto;
+}
+
+/* ===== ATTACHMENT MENU ===== */
+
+#attachmentMenu {
+    position: absolute;
+    left: 20px;
+    bottom: calc(100% + 8px);
+    z-index: 1000;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    max-width: calc(100% - 40px);
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== HIDE EMPTY MESSAGE BUBBLES ===== */
+
+#messages .message:empty {
+    display: none !important;
+}
+
+/* ===== MOBILE LAYOUT ===== */
+
+@media (max-width: 600px) {
+    .chat-form {
+        gap: 6px;
+        padding: 10px;
+    }
+
+    #attachBtn {
+        flex-basis: 42px;
+        width: 42px;
+        height: 42px;
+    }
+
+    #attachmentMenu {
+        left: 10px;
+        max-width: calc(100% - 20px);
+    }
+}
