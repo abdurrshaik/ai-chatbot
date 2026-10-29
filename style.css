@@ -1414,3 +1414,34 @@ overflow: hidden;
     gap: 8px;
     flex-shrink: 0;
 }
+/* ==================================
+   HEADER ALIGNMENT
+================================== */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+}
+
+.header-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.header-title {
+    margin: 0;
+    text-align: center;
+}
+
+.header-auth {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+}
