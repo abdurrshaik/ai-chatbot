@@ -1,4 +1,112 @@
+import {
+    auth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from "./firebase.js";
 document.addEventListener("DOMContentLoaded", function () {
+        // Firebase account elements
+    const authEmail = document.getElementById("authEmail");
+    const authPassword = document.getElementById("authPassword");
+    const signUpBtn = document.getElementById("signUpBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const loggedOutView = document.getElementById("loggedOutView");
+    const loggedInView = document.getElementById("loggedInView");
+    const userEmail = document.getElementById("userEmail");
+    const authStatus = document.getElementById("authStatus");
+
+    // Create a new account
+    signUpBtn.addEventListener("click", async function () {
+        const email = authEmail.value.trim();
+        const password = authPassword.value;
+
+        if (!email || !password) {
+            authStatus.textContent = "Please enter your email and password.";
+            return;
+        }
+
+        try {
+            authStatus.textContent = "Creating your account...";
+
+            await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+            authStatus.textContent = "Account created successfully!";
+            authPassword.value = "";
+        } catch (error) {
+            authStatus.textContent = getAuthErrorMessage(error.code);
+        }
+    });
+
+    // Log in to an existing account
+    loginBtn.addEventListener("click", async function () {
+        const email = authEmail.value.trim();
+        const password = authPassword.value;
+
+        if (!email || !password) {
+            authStatus.textContent = "Please enter your email and password.";
+            return;
+        }
+
+        try {
+            authStatus.textContent = "Logging in...";
+
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+            authStatus.textContent = "Logged in successfully!";
+            authPassword.value = "";
+        } catch (error) {
+            authStatus.textContent = getAuthErrorMessage(error.code);
+        }
+    });
+
+    // Log out
+    logoutBtn.addEventListener("click", async function () {
+        try {
+            await signOut(auth);
+            authStatus.textContent = "You have logged out.";
+        } catch (error) {
+            authStatus.textContent = "Could not log out. Please try again.";
+            console.error(error);
+        }
+    });
+
+    // Update the account display when authentication changes
+    onAuthStateChanged(auth, function (user) {
+        if (user) {
+            loggedOutView.hidden = true;
+            loggedInView.hidden = false;
+            userEmail.textContent = user.email || "Signed in";
+        } else {
+            loggedOutView.hidden = false;
+            loggedInView.hidden = true;
+            userEmail.textContent = "";
+        }
+    });
+
+    // Show helpful messages for common Firebase errors
+    function getAuthErrorMessage(code) {
+        const messages = {
+            "auth/invalid-email": "Please enter a valid email address.",
+            "auth/email-already-in-use": "This email already has an account. Please log in.",
+            "auth/weak-password": "Choose a stronger password with at least 6 characters.",
+            "auth/invalid-credential": "Email or password is incorrect.",
+            "auth/too-many-requests": "Too many attempts. Please try again later.",
+            "auth/network-request-failed": "Network error. Check your internet connection."
+        };
+
+        return messages[code] || "Something went wrong. Please try again.";
+    }
 const form = document.getElementById("chatForm");
 const input = document.getElementById("userInput");
 const messages = document.getElementById("messages");
