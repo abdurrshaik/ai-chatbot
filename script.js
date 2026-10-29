@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("chatForm");
     const input = document.getElementById("userInput");
@@ -46,23 +45,35 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedImages = [];
     let isSending = false;
 
-    // Create a small attachment status area.
-    const attachmentWrapper =
+    // Create an attachment status area.
+    // This works even if .attachment-wrapper is missing.
+    let attachmentWrapper =
         document.querySelector(".attachment-wrapper");
 
     let attachmentStatus =
         document.getElementById("attachmentStatus");
 
-    if (attachmentWrapper && !attachmentStatus) {
+    if (!attachmentStatus) {
         attachmentStatus = document.createElement("div");
         attachmentStatus.id = "attachmentStatus";
         attachmentStatus.setAttribute("aria-live", "polite");
 
         attachmentStatus.style.fontSize = "13px";
-        attachmentStatus.style.marginTop = "6px";
+        attachmentStatus.style.marginTop = "8px";
+        attachmentStatus.style.padding = "6px";
         attachmentStatus.style.overflowWrap = "anywhere";
+        attachmentStatus.style.display = "block";
+        attachmentStatus.style.width = "100%";
+        attachmentStatus.style.boxSizing = "border-box";
 
-        attachmentWrapper.appendChild(attachmentStatus);
+        if (attachmentWrapper) {
+            attachmentWrapper.appendChild(attachmentStatus);
+        } else {
+            form.insertAdjacentElement(
+                "beforebegin",
+                attachmentStatus
+            );
+        }
     }
 
     function setAttachmentStatus(text, isError = false) {
@@ -96,7 +107,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.addEventListener("click", function (event) {
             if (
-                !event.target.closest(".attachment-wrapper")
+                !event.target.closest(".attachment-wrapper") &&
+                !event.target.closest("#attachmentMenu")
             ) {
                 closeAttachmentMenu();
             }
@@ -111,21 +123,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Open each file picker.
     if (cameraOption && cameraInput) {
-        cameraOption.addEventListener("click", function () {
+        cameraOption.addEventListener("click", function (event) {
+            event.preventDefault();
             closeAttachmentMenu();
             cameraInput.click();
         });
     }
 
     if (photosOption && photosInput) {
-        photosOption.addEventListener("click", function () {
+        photosOption.addEventListener("click", function (event) {
+            event.preventDefault();
             closeAttachmentMenu();
+
+            // Open the native photo picker directly.
             photosInput.click();
         });
     }
 
     if (filesOption && filesInput) {
-        filesOption.addEventListener("click", function () {
+        filesOption.addEventListener("click", function (event) {
+            event.preventDefault();
             closeAttachmentMenu();
             filesInput.click();
         });
@@ -163,20 +180,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Handle selected images.
     async function handleSelectedFiles(fileInput) {
-        if (
-            !fileInput ||
-            !fileInput.files ||
-            fileInput.files.length === 0
-        ) {
+        if (!fileInput || !fileInput.files) {
+            return;
+        }
+
+        if (fileInput.files.length === 0) {
             return;
         }
 
         const files = Array.from(fileInput.files);
 
-        // Clear the picker so the same file can be selected again.
+        // Clear the picker so the same image can be selected again.
         fileInput.value = "";
 
-        const remainingSlots = MAX_IMAGES - selectedImages.length;
+        const remainingSlots =
+            MAX_IMAGES - selectedImages.length;
 
         if (remainingSlots <= 0) {
             setAttachmentStatus(
@@ -197,7 +215,25 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         for (const file of filesToProcess) {
-            if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+            // Some mobile browsers may not provide a MIME type.
+            let fileType = file.type;
+
+            if (!fileType && file.name) {
+                const extension =
+                    file.name.split(".").pop().toLowerCase();
+
+                const extensionTypes = {
+                    jpg: "image/jpeg",
+                    jpeg: "image/jpeg",
+                    png: "image/png",
+                    webp: "image/webp",
+                    gif: "image/gif"
+                };
+
+                fileType = extensionTypes[extension] || "";
+            }
+
+            if (!ALLOWED_IMAGE_TYPES.includes(fileType)) {
                 setAttachmentStatus(
                     "Unsupported file: " + file.name +
                     ". Choose a JPG, PNG, WEBP, or GIF image.",
@@ -216,13 +252,21 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             try {
+                setAttachmentStatus(
+                    "Loading image: " + file.name + "..."
+                );
+
                 const image = await readImageAsDataURL(file);
+
+                image.type = fileType;
                 selectedImages.push(image);
+
             } catch (error) {
                 console.error(error);
 
                 setAttachmentStatus(
-                    "Could not read " + file.name + ".",
+                    "Could not read " + file.name +
+                    ". Please try another image.",
                     true
                 );
             }
@@ -253,16 +297,31 @@ document.addEventListener("DOMContentLoaded", function () {
         setAttachmentStatus("");
     }
 
+    // Listen for image selection on mobile and PC.
     [cameraInput, photosInput, filesInput].forEach(
         function (fileInput) {
-            if (fileInput) {
-                fileInput.addEventListener(
-                    "change",
-                    function () {
+            if (!fileInput) return;
+
+            fileInput.addEventListener(
+                "change",
+                function () {
+                    handleSelectedFiles(fileInput);
+                }
+            );
+
+            // Some mobile browsers restore a file input when
+            // the user returns from the photo picker.
+            fileInput.addEventListener(
+                "input",
+                function () {
+                    if (
+                        fileInput.files &&
+                        fileInput.files.length > 0
+                    ) {
                         handleSelectedFiles(fileInput);
                     }
-                );
-            }
+                }
+            );
         }
     );
 
@@ -280,7 +339,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!app) return;
 
         app.classList.add("sidebar-closed");
-
         sidebarOverlay.classList.remove("visible");
 
         if (sidebarToggle) {
@@ -721,7 +779,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             try {
                 data = JSON.parse(responseText);
-            } catch {
+            } catch (error) {
                 throw new Error(
                     "The server returned an invalid response (HTTP " +
                     response.status + ")."
