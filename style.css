@@ -1106,3 +1106,15 @@ MOBILE LAYOUT
         height: 44px;
     }
 }
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
