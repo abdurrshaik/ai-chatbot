@@ -42,5 +42,8 @@ export {
     getDocs,
     query,
     orderBy,
-    serverTimestamp
+    serverTimestamp,
+    doc,
+    setDoc,
+    deleteDoc
 };
