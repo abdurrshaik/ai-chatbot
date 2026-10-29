@@ -551,35 +551,69 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Mobile sidebar
-    function closeSidebar() {
-        if (!sidebar || !app) return;
+function closeSidebar() {
+    if (!sidebar || !app) return;
 
-        sidebar.classList.remove("sidebar-open");
-        app.classList.remove("sidebar-visible");
-
-        if (sidebarToggle) {
-            sidebarToggle.setAttribute("aria-expanded", "false");
-        }
-    }
-
-    function toggleSidebar() {
-        if (!sidebar || !app) return;
-
-        const isOpen = sidebar.classList.toggle("sidebar-open");
-
-        app.classList.toggle("sidebar-visible", isOpen);
-
-        if (sidebarToggle) {
-            sidebarToggle.setAttribute(
-                "aria-expanded",
-                String(isOpen)
-            );
-        }
-    }
+    sidebar.classList.remove("sidebar-open");
+    app.classList.remove("sidebar-visible");
 
     if (sidebarToggle) {
-        sidebarToggle.addEventListener("click", toggleSidebar);
+        sidebarToggle.setAttribute("aria-expanded", "false");
     }
+}
+
+function toggleSidebar() {
+    if (!sidebar || !app) return;
+
+    const isOpen = sidebar.classList.contains("sidebar-open");
+
+    if (isOpen) {
+        closeSidebar();
+    } else {
+        sidebar.classList.add("sidebar-open");
+        app.classList.add("sidebar-visible");
+
+        if (sidebarToggle) {
+            sidebarToggle.setAttribute("aria-expanded", "true");
+        }
+    }
+}
+
+if (sidebarToggle) {
+    sidebarToggle.addEventListener("click", toggleSidebar);
+}
+
+// Close the sidebar when clicking outside it on mobile.
+document.addEventListener("click", function (event) {
+    if (!sidebar || !sidebarToggle) return;
+
+    if (window.innerWidth > 768) return;
+
+    const isOpen = sidebar.classList.contains("sidebar-open");
+
+    if (!isOpen) return;
+
+    if (
+        !sidebar.contains(event.target) &&
+        !sidebarToggle.contains(event.target)
+    ) {
+        closeSidebar();
+    }
+});
+
+// Close the sidebar using Escape.
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeSidebar();
+    }
+});
+
+// Close the sidebar when returning to desktop layout.
+window.addEventListener("resize", function () {
+    if (window.innerWidth > 768) {
+        closeSidebar();
+    }
+});
 
     // Conversation data
     let conversations = [];
