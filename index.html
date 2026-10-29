@@ -14,11 +14,12 @@
 <!-- Website styling -->
 <link rel="stylesheet" href="./style.css">
 
-<!-- Browser tab icon -->
-<link rel="icon" type="image/png" href="./chatbot-logo.png">
+<!-- Neon Ribbon Robot Icon for the browser tab -->
+<link rel="icon" type="image/png" sizes="512x512" href="./chatbot-logo.png?v=2">
+<link rel="shortcut icon" type="image/png" href="./chatbot-logo.png?v=2">
 
 <!-- Mobile home-screen icon -->
-<link rel="apple-touch-icon" href="./chatbot-logo.png">
+<link rel="apple-touch-icon" href="./chatbot-logo.png?v=2">
 <link rel="manifest" href="./manifest.json">
 
 
@@ -28,27 +29,32 @@
 <div class="app">
 
 
+<!-- Sidebar -->
 <aside class="sidebar">
 
+    <!-- Logo beside AI Chatbot -->
     <div class="logo">
-    <img
-        src="./chatbot-logo.png"
-        alt="AI Chatbot logo"
-        class="logo-image"
-        onerror="this.style.display='none'; this.nextElementSibling.textContent='🤖 AI Chatbot';"
-    >
-    <span>AI Chatbot</span>
-</div>
+        <img
+            src="./chatbot-logo.png?v=2"
+            alt="AI Chatbot logo"
+            class="logo-image"
+            onerror="this.style.display='none'; this.nextElementSibling.textContent='🤖 AI Chatbot';"
+        >
+        <span>AI Chatbot</span>
+    </div>
 
     <button type="button" class="new-chat" id="newChatBtn">
         + New Chat
     </button>
 
     <p>Your AI Assistant</p>
+
 </aside>
 
+<!-- Main chat area -->
 <main class="main">
 
+    <!-- Header -->
     <header class="header">
 
         <button
@@ -63,6 +69,7 @@
 
     </header>
 
+    <!-- Messages -->
     <section class="messages" id="messages">
 
         <div class="welcome" id="welcome">
@@ -72,6 +79,7 @@
 
     </section>
 
+    <!-- Input area -->
     <footer class="input-area">
 
         <form class="chat-form" id="chatForm">
