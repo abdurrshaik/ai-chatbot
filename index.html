@@ -31,13 +31,14 @@
 <aside class="sidebar">
 
     <div class="logo">
-        <img
-            src="./chatbot-logo.png"
-            alt="AI Chatbot logo"
-            class="logo-image"
-        >
-        <span>AI Chatbot</span>
-    </div>
+    <img
+        src="./chatbot-logo.png"
+        alt="AI Chatbot logo"
+        class="logo-image"
+        onerror="this.style.display='none'; this.nextElementSibling.textContent='🤖 AI Chatbot';"
+    >
+    <span>AI Chatbot</span>
+</div>
 
     <button type="button" class="new-chat" id="newChatBtn">
         + New Chat
