@@ -8,7 +8,6 @@
 
 <meta name="theme-color" content="#10172a">
 <meta name="description" content="AI Chatbot — your personal AI assistant.">
-
 <meta name="google-site-verification" content="tE_5_mWVO_WaxwP3iTXrBw-X40dDA-n8T3pfh5mfr5w">
 
 <title>AI Chatbot</title>
@@ -30,6 +29,7 @@
 <!-- Sidebar -->
 <aside class="sidebar">
 
+    <!-- Logo -->
     <div class="logo">
         <img
             src="./chatbot-logo.png?v=2"
@@ -40,62 +40,22 @@
         <span>AI Chatbot</span>
     </div>
 
+    <!-- New Chat -->
     <button type="button" class="new-chat" id="newChatBtn">
-    + New Chat
-</button>
-
-<p>Your AI Assistant</p>
-
-<!-- Firebase User Account Section -->
-
-<div class="auth-panel" id="authPanel">
-
-
-<h3>👤 Your Account</h3>
-
-<div id="loggedOutView">
-    <input
-        type="email"
-        id="authEmail"
-        placeholder="Email address"
-        autocomplete="email"
-    >
-
-    <input
-        type="password"
-        id="authPassword"
-        placeholder="Password"
-        autocomplete="current-password"
-    >
-
-    <button type="button" id="signUpBtn">
-        Create Account
+        + New Chat
     </button>
 
-    <button type="button" id="loginBtn">
-        Log In
-    </button>
-</div>
+    <p>Your AI Assistant</p>
 
-<div id="loggedInView" hidden>
-    <p id="userEmail"></p>
-
-    <button type="button" id="logoutBtn">
-        Log Out
-    </button>
-</div>
-
-<p id="authStatus" role="status" aria-live="polite"></p>
-
-
-</div>
+    <!-- Chat History -->
+    <div class="chat-history" id="chatHistory"></div>
 
 </aside>
 
-<!-- Main chat area -->
+<!-- Main Chat Area -->
 <main class="main">
 
-    <!-- Header with hamburger menu and logo -->
+    <!-- Header -->
     <header class="header">
 
         <button
@@ -112,9 +72,115 @@
             class="header-logo"
         >
 
-        <span>AI Chatbot</span>
+        <span class="header-title">AI Chatbot</span>
+
+        <!-- Top-right Account Buttons -->
+        <div class="header-auth">
+            <button type="button" id="openSignInBtn">
+                Sign In
+            </button>
+
+            <button type="button" id="openLoginBtn">
+                Log In
+            </button>
+        </div>
 
     </header>
+
+    <!-- Login Popup -->
+    <div class="auth-modal" id="authModal" hidden>
+
+        <div
+            class="auth-box"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="authTitle"
+        >
+
+            <!-- Close Button -->
+            <button
+                type="button"
+                class="auth-close"
+                id="closeAuthBtn"
+                aria-label="Close"
+            >×</button>
+
+            <!-- Popup Logo -->
+            <img
+                src="./chatbot-logo.png?v=2"
+                alt="AI Chatbot logo"
+                class="auth-logo"
+            >
+
+            <h2 id="authTitle">Welcome to AI Chatbot</h2>
+
+            <p id="authDescription">
+                Sign in or create your account to continue.
+            </p>
+
+            <!-- Logged-out View -->
+            <div id="loggedOutView">
+
+                <form id="authForm">
+
+                    <label for="authEmail">Email address</label>
+
+                    <input
+                        type="email"
+                        id="authEmail"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+
+                    <label for="authPassword">Password</label>
+
+                    <input
+                        type="password"
+                        id="authPassword"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        minlength="6"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        id="signUpBtn"
+                        class="auth-create-btn"
+                    >Create Account</button>
+
+                    <button
+                        type="submit"
+                        id="loginBtn"
+                        class="auth-login-btn"
+                    >Log In</button>
+
+                </form>
+
+            </div>
+
+            <!-- Logged-in View -->
+            <div id="loggedInView" hidden>
+
+                <p>You are logged in!</p>
+
+                <p id="userEmail"></p>
+
+                <button
+                    type="button"
+                    id="logoutBtn"
+                    class="auth-login-btn"
+                >Log Out</button>
+
+            </div>
+
+            <!-- Account Status -->
+            <p id="authStatus" role="status" aria-live="polite"></p>
+
+        </div>
+
+    </div>
 
     <!-- Messages -->
     <section class="messages" id="messages">
@@ -126,12 +192,12 @@
 
     </section>
 
-    <!-- Input area -->
+    <!-- Input Area -->
     <footer class="input-area">
 
         <form class="chat-form" id="chatForm">
 
-            <!-- Attachment button and menu -->
+            <!-- Attachment Button and Menu -->
             <div class="attachment-wrapper">
 
                 <button
@@ -162,7 +228,7 @@
 
             </div>
 
-            <!-- Camera input -->
+            <!-- Camera Input -->
             <input
                 type="file"
                 id="cameraInput"
@@ -171,7 +237,7 @@
                 hidden
             >
 
-            <!-- Photo gallery input -->
+            <!-- Photo Gallery Input -->
             <input
                 type="file"
                 id="photosInput"
@@ -180,7 +246,7 @@
                 hidden
             >
 
-            <!-- File picker input -->
+            <!-- File Picker Input -->
             <input
                 type="file"
                 id="filesInput"
@@ -188,7 +254,7 @@
                 hidden
             >
 
-            <!-- Message box -->
+            <!-- Message Box -->
             <textarea
                 class="chat-input"
                 id="userInput"
@@ -198,7 +264,7 @@
                 required
             ></textarea>
 
-            <!-- Send button -->
+            <!-- Send Button -->
             <button type="submit" class="send-button">
                 Send
             </button>
@@ -216,13 +282,13 @@
 
 </div>
 
-<!-- Markdown and HTML sanitization -->
+<!-- Markdown and HTML Sanitization -->
 
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
 
-<!-- Chatbot functionality -->
+<!-- Chatbot and Firebase Functionality -->
 
 <script type="module" src="./script.js"></script>
 
