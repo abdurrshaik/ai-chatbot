@@ -579,6 +579,17 @@ function toggleSidebar() {
     }
 }
 
+function closeSidebar() {
+    if (!sidebar || !app) return;
+
+    sidebar.classList.remove("sidebar-open");
+    app.classList.remove("sidebar-visible");
+
+    if (sidebarToggle) {
+        sidebarToggle.setAttribute("aria-expanded", "false");
+    }
+}
+
 if (sidebarToggle) {
     sidebarToggle.addEventListener("click", toggleSidebar);
 }
