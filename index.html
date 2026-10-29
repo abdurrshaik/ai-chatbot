@@ -41,10 +41,54 @@
     </div>
 
     <button type="button" class="new-chat" id="newChatBtn">
-        + New Chat
+    + New Chat
+</button>
+
+<p>Your AI Assistant</p>
+
+<!-- Firebase User Account Section -->
+
+<div class="auth-panel" id="authPanel">
+
+
+<h3>👤 Your Account</h3>
+
+<div id="loggedOutView">
+    <input
+        type="email"
+        id="authEmail"
+        placeholder="Email address"
+        autocomplete="email"
+    >
+
+    <input
+        type="password"
+        id="authPassword"
+        placeholder="Password"
+        autocomplete="current-password"
+    >
+
+    <button type="button" id="signUpBtn">
+        Create Account
     </button>
 
-    <p>Your AI Assistant</p>
+    <button type="button" id="loginBtn">
+        Log In
+    </button>
+</div>
+
+<div id="loggedInView" hidden>
+    <p id="userEmail"></p>
+
+    <button type="button" id="logoutBtn">
+        Log Out
+    </button>
+</div>
+
+<p id="authStatus" role="status" aria-live="polite"></p>
+
+
+</div>
 
 </aside>
 
