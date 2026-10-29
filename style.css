@@ -1079,3 +1079,30 @@ MOBILE LAYOUT
 
 
 }
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-image {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.logo span {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .app:not(.sidebar-closed) .logo-image {
+        width: 44px;
+        height: 44px;
+    }
+}
