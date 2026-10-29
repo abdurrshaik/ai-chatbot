@@ -1179,3 +1179,195 @@ overflow: hidden;
         width: 250px;
     }
 }
+/* ===== COMPLETELY COLLAPSE SIDEBAR ===== */
+
+.app {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.sidebar {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    min-width: 0;
+    overflow: hidden;
+    transition: width 0.25s ease, flex-basis 0.25s ease,
+                padding 0.25s ease;
+}
+
+/* Sidebar closed */
+.app:not(.sidebar-visible) .sidebar {
+    width: 0 !important;
+    min-width: 0 !important;
+    flex-basis: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    visibility: hidden;
+}
+
+/* Sidebar open */
+.app.sidebar-visible .sidebar {
+    width: 290px !important;
+    flex-basis: 290px !important;
+    visibility: visible;
+}
+
+/* Keep main content from shrinking incorrectly */
+.main {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+}
+
+@media (max-width: 600px) {
+    .app.sidebar-visible .sidebar {
+        width: 250px !important;
+        flex-basis: 250px !important;
+    }
+}
+/* ===== ATTACHMENT MENU ===== */
+
+#attachmentMenu {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 8px);
+    z-index: 1000;
+
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+
+    width: 150px;
+    max-width: calc(100vw - 30px);
+    padding: 10px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Stack the three attachment buttons vertically */
+#attachmentMenu button,
+#cameraOption,
+#photosOption,
+#filesOption {
+    width: 100%;
+    min-height: 42px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Keep the plus button beside the input */
+#attachBtn {
+    position: relative;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    margin: 0;
+}
+
+/* Keep the input and Send button on one line */
+#chatForm {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+#userInput {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#chatForm button[type="submit"] {
+    flex: 0 0 auto;
+}/* ===== ATTACHMENT MENU ===== */
+
+#attachmentMenu {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 8px);
+    z-index: 1000;
+
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+
+    width: 150px;
+    max-width: calc(100vw - 30px);
+    padding: 10px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Stack the three attachment buttons vertically */
+#attachmentMenu button,
+#cameraOption,
+#photosOption,
+#filesOption {
+    width: 100%;
+    min-height: 42px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Keep the plus button beside the input */
+#attachBtn {
+    position: relative;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    margin: 0;
+}
+
+/* Keep the input and Send button on one line */
+#chatForm {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+#userInput {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#chatForm button[type="submit"] {
+    flex: 0 0 auto;
+}
+/* ===== HEADER ALIGNMENT ===== */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+}
+
+.header img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.header h1,
+.header h2 {
+    margin: 0;
+    text-align: left;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
