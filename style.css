@@ -1490,3 +1490,51 @@ overflow: hidden;
     margin-left: auto;
     flex-shrink: 0;
 }
+/* ===== CENTER WELCOME MESSAGE ===== */
+
+.messages {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* Center welcome content when visible */
+.welcome {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    padding: 24px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.welcome h1 {
+    margin: 0 0 12px;
+    font-size: 30px;
+    font-weight: 700;
+    color: #202123;
+}
+
+.welcome p {
+    margin: 0;
+    font-size: 16px;
+    color: #6b7280;
+}
+
+/* Keep the welcome message hidden only when explicitly hidden */
+.welcome[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
+    .welcome h1 {
+        font-size: 24px;
+    }
+
+    .welcome p {
+        font-size: 14px;
+    }
+}
