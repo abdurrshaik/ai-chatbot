@@ -1445,3 +1445,48 @@ overflow: hidden;
     gap: 8px;
     flex-shrink: 0;
 }
+/* ===== FIX HEADER ALIGNMENT ===== */
+
+.header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 12px 20px;
+    min-width: 0;
+}
+
+/* Menu button stays on the left */
+.sidebar-toggle {
+    flex: 0 0 auto;
+    margin-right: 0;
+}
+
+/* Logo stays beside the menu button */
+.header-logo {
+    display: block;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    margin: 0;
+}
+
+/* Title stays beside the logo */
+.header-title {
+    flex: 0 1 auto;
+    margin: 0;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Account buttons stay on the right */
+.header-auth {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
