@@ -838,3 +838,244 @@ display: flex !important;
 
 
 }
+
+/* =========================================
+AI CHATBOT LOGO
+========================================= */
+
+.logo {
+display: flex;
+align-items: center;
+gap: 10px;
+min-width: 0;
+font-size: 22px;
+font-weight: bold;
+line-height: 1.3;
+}
+
+.logo-image {
+display: block;
+width: 42px;
+height: 42px;
+flex-shrink: 0;
+object-fit: contain;
+border-radius: 12px;
+}
+
+.logo span {
+min-width: 0;
+overflow-wrap: anywhere;
+}
+
+/* =========================================
+CHAT COMPOSER
+========================================= */
+
+.input-area {
+min-width: 0;
+padding-top: 12px;
+}
+
+.chat-form {
+position: relative;
+align-items: flex-end;
+min-width: 0;
+}
+
+/* Keep the attachment button and Send button visible */
+
+.attachment-wrapper {
+flex-shrink: 0;
+}
+
+.attach-button,
+.send-button {
+flex-shrink: 0;
+}
+
+/* Make sure the message field can shrink */
+
+.chat-input {
+flex: 1 1 auto;
+width: 0;
+min-width: 0;
+}
+
+/* =========================================
+ATTACHMENT PREVIEW AREA
+These styles support common preview class names.
+========================================= */
+
+.attachment-preview,
+.attachment-previews,
+.selected-images {
+display: flex;
+flex-wrap: wrap;
+align-items: flex-start;
+gap: 8px;
+width: 100%;
+max-width: 900px;
+margin: 0 auto 10px;
+}
+
+.attachment-preview-item,
+.selected-image,
+.image-preview-item {
+position: relative;
+display: inline-flex;
+flex: 0 0 auto;
+align-items: center;
+justify-content: center;
+width: 76px;
+height: 76px;
+overflow: hidden;
+border: 1px solid #d1d5db;
+border-radius: 12px;
+background: #ffffff;
+}
+
+.attachment-preview-item img,
+.selected-image img,
+.image-preview-item img {
+display: block;
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+/* Remove attachment button */
+
+.remove-attachment,
+.remove-image,
+.attachment-remove {
+position: absolute;
+top: 3px;
+right: 3px;
+display: flex;
+align-items: center;
+justify-content: center;
+width: 25px;
+height: 25px;
+padding: 0;
+border: none;
+border-radius: 50%;
+background: rgba(17, 24, 39, 0.85);
+color: #ffffff;
+font-size: 19px;
+line-height: 1;
+cursor: pointer;
+}
+
+.remove-attachment:hover,
+.remove-image:hover,
+.attachment-remove:hover {
+background: #dc2626;
+}
+
+/* =========================================
+MOBILE LAYOUT
+========================================= */
+
+@media screen and (max-width: 600px) {
+
+
+.header {
+    gap: 10px;
+}
+
+.messages {
+    min-height: 0;
+    padding: 12px 10px;
+}
+
+.input-area {
+    padding: 8px;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+}
+
+.chat-form {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.attachment-wrapper {
+    flex: 0 0 auto;
+}
+
+.attach-button {
+    width: 40px;
+    height: 40px;
+    font-size: 26px;
+}
+
+.chat-input {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    min-height: 42px;
+    max-height: 110px;
+    padding: 10px 12px;
+    font-size: 16px;
+}
+
+.send-button {
+    flex: 0 0 auto;
+    min-width: 54px;
+    min-height: 42px;
+    padding: 0 11px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.disclaimer {
+    margin-top: 7px;
+    font-size: 10px;
+    line-height: 1.35;
+    text-align: center;
+}
+
+.attachment-preview,
+.attachment-previews,
+.selected-images {
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.attachment-preview-item,
+.selected-image,
+.image-preview-item {
+    width: 62px;
+    height: 62px;
+}
+
+.remove-attachment,
+.remove-image,
+.attachment-remove {
+    width: 23px;
+    height: 23px;
+    font-size: 17px;
+}
+
+/* Compact logo when the mobile sidebar is narrow */
+
+.app.sidebar-closed .logo-image {
+    width: 36px;
+    height: 36px;
+}
+
+.app:not(.sidebar-closed) .sidebar .logo {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    white-space: normal !important;
+}
+
+.app:not(.sidebar-closed) .sidebar .logo-image {
+    width: 42px;
+    height: 42px;
+}
+
+
+}
