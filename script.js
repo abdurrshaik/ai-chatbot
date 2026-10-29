@@ -590,7 +590,14 @@ function closeSidebar() {
     }
 }
 
+/* Initialize sidebar in the open state */
+if (sidebar && app) {
+    sidebar.classList.add("sidebar-open");
+    app.classList.add("sidebar-visible");
+}
+
 if (sidebarToggle) {
+    sidebarToggle.setAttribute("aria-expanded", "true");
     sidebarToggle.addEventListener("click", toggleSidebar);
 }
 
