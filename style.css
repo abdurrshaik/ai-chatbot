@@ -1563,3 +1563,31 @@ overflow: hidden;
     object-fit: cover;
     border-radius: 8px;
 }
+
+/* Keep attached images inside the chat message */
+#messages .message-images {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+#messages .message-images img {
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 320px !important;
+    max-height: 300px !important;
+    object-fit: contain;
+    flex: 0 1 auto;
+}
+
+/* Keep the chat message itself from expanding */
+#messages .message {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
