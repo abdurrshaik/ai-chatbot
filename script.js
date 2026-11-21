@@ -509,8 +509,20 @@ document.addEventListener("DOMContentLoaded", function () {
             preview.className = "attachment-preview-item";
 
             const img = document.createElement("img");
-            img.src = image.dataURL;
-            img.alt = image.name;
+
+img.src = image.dataURL;
+img.alt = image.name || "Attached image";
+img.loading = "lazy";
+
+// Limit the displayed image size
+img.style.setProperty("display", "block", "important");
+img.style.setProperty("width", "auto", "important");
+img.style.setProperty("height", "auto", "important");
+img.style.setProperty("max-width", "320px", "important");
+img.style.setProperty("max-height", "300px", "important");
+img.style.setProperty("object-fit", "contain");
+
+imageContainer.appendChild(img);
 
             const removeButton = document.createElement("button");
             removeButton.type = "button";
