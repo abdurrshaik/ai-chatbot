@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const STORAGE_KEY = "aiChatbotConversationsV1";
     const MAX_IMAGES = 3;
-    const MAX_IMAGE_SIZE = 3 * 1024 * 1024;
+    const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
     const ALLOWED_IMAGE_TYPES = [
         "image/jpeg",
@@ -469,7 +469,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (file.size > MAX_IMAGE_SIZE) {
                 setAttachmentStatus(
-                    file.name + " is too large. Maximum size is 3 MB.",
+                    file.name + " is too large. Maximum size is 5 MB.",
                     true
                 );
                 continue;
@@ -996,44 +996,38 @@ window.addEventListener("resize", function () {
 
         try {
             // Convert conversation history into the API format.
-            const apiMessages = chat.messages.map(function (message) {
-                const hasImages =
-                    Array.isArray(message.images) &&
-                    message.images.length > 0;
+            // Send only the latest message to Cloudflare.
+// This prevents old image attachments from being uploaded again.
+const latestMessage = chat.messages[chat.messages.length - 1];
 
-                if (!hasImages) {
-                    return {
-                        role: message.role,
-                        content: message.text || ""
-                    };
-                }
+const latestImages = Array.isArray(latestMessage.images)
+    ? latestMessage.images
+    : [];
 
-                const content = [];
+const content = [];
 
-                if (message.text) {
-                    content.push({
-                        type: "text",
-                        text: message.text
-                    });
-                }
+if (latestMessage.text) {
+    content.push({
+        type: "text",
+        text: latestMessage.text
+    });
+}
 
-                message.images.forEach(function (image) {
-                    if (!image.dataURL) return;
+latestImages.forEach(function (image) {
+    if (!image || !image.dataURL) return;
 
-                    content.push({
-                        type: "image_url",
-                        image_url: {
-                            url: image.dataURL
-                        }
-                    });
-                });
+    content.push({
+        type: "image_url",
+        image_url: {
+            url: image.dataURL
+        }
+    });
+});
 
-                return {
-                    role: message.role,
-                    content: content
-                };
-            });
-
+const apiMessages = [{
+    role: latestMessage.role,
+    content: content
+}];
             // Call your Cloudflare Worker.
             const response = await fetch(API_URL, {
                 method: "POST",
