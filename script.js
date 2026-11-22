@@ -1830,3 +1830,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     setButtons(false);
 });
+
+// =====================================
+// ANDROID KEYBOARD INPUT POSITION
+// =====================================
+
+(function () {
+    const viewport = window.visualViewport;
+
+    if (!viewport) return;
+
+    function updateKeyboardPosition() {
+        const keyboardHeight = Math.max(
+            0,
+            window.innerHeight - viewport.height - viewport.offsetTop
+        );
+
+        document.documentElement.style.setProperty(
+            "--keyboard-offset",
+            keyboardHeight + "px"
+        );
+    }
+
+    viewport.addEventListener("resize", updateKeyboardPosition);
+    viewport.addEventListener("scroll", updateKeyboardPosition);
+    window.addEventListener("resize", updateKeyboardPosition);
+
+    updateKeyboardPosition();
+})();
