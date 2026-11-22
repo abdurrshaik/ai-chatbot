@@ -1654,3 +1654,105 @@ overflow: hidden;
     max-width: 100%;
     box-sizing: border-box;
 }
+
+/* =========================================
+   MOBILE FULL-SCREEN SIDEBAR
+========================================= */
+
+.sidebar-close {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .app {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    .app:not(.sidebar-visible) .sidebar {
+        display: none;
+    }
+
+    .app.sidebar-visible .sidebar {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        box-sizing: border-box;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow-y: auto;
+        flex: none;
+        padding: 20px 16px;
+        background: #202123;
+        color: #ffffff;
+    }
+
+    .app.sidebar-visible .main {
+        display: none;
+    }
+
+    .app:not(.sidebar-visible) .main {
+        display: flex;
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+    }
+
+    .sidebar-close {
+        display: block;
+        align-self: flex-end;
+        width: 42px;
+        height: 42px;
+        margin: 0 0 12px auto;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: #ffffff;
+        font-size: 32px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .sidebar .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .sidebar .new-chat {
+        width: 100%;
+        min-height: 52px;
+        margin-top: 24px;
+        border-radius: 14px;
+    }
+
+    .sidebar .chat-history {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Keep the composer above the mobile keyboard */
+    .app:not(.sidebar-visible) .input-area {
+        bottom: var(--keyboard-height, 0px);
+    }
+
+    .app:not(.sidebar-visible) .main {
+        height: calc(100% - var(--keyboard-height, 0px));
+    }
+
+    .app:not(.sidebar-visible) .messages {
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    .app:not(.sidebar-visible) .chat-input {
+        min-width: 0;
+        max-height: 30vh;
+        overflow-y: auto;
+    }
+}
