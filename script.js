@@ -789,7 +789,8 @@ window.addEventListener("resize", function () {
                 img.alt = image.name || "Attached image";
                 img.loading = "lazy";
 
-                imageContainer.appendChild(img);
+                
+                preview.appendChild(img);
             });
 
             wrapper.appendChild(imageContainer);
