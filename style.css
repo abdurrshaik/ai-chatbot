@@ -1454,3 +1454,19 @@ body {
         font-size: 11px;
     }
 }
+
+/* AI Astra logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-image {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
