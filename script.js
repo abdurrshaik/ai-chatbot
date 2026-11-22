@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const API_URL =
-        "https://my-ai-chatbot-api.abdurrshaik.workers.dev/";
+    "https://my-ai-chatbot-api.abdurrshaik.workers.dev/chat";
 
     const STORAGE_KEY = "aiChatbotConversationsV1";
 
@@ -1179,16 +1179,14 @@ updateKeyboardPosition();
             }];
 
             const response = await fetch(API_URL, {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    messages: apiMessages
-                })
-            });
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        message: latestMessage.text || "Please describe the attached image."
+    })
+});
 
             if (!response.ok) {
                 let errorMessage =
