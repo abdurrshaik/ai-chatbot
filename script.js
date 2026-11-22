@@ -1344,460 +1344,469 @@ updateKeyboardPosition();
 
 // =====================================
 // GEMINI LIVE VOICE CHAT
-// Replace your previous voice-chat block with this.
-// Keep the rest of script.js unchanged.
+// Replace the previous voice-chat block
 // =====================================
 
-(() => {
-const WORKER_URL =
-"https://my-ai-chatbot-api.abdurrshaik.workers.dev";
+document.addEventListener("DOMContentLoaded", function () {
+    const WORKER_URL =
+        "https://my-ai-chatbot-api.abdurrshaik.workers.dev";
 
-const LIVE_MODEL = "models/gemini-3.8-live";
+    // This model must match the model allowed by your Worker token.
+    const LIVE_MODEL = "models/gemini-3.8-live";
 
-const openBtn = document.getElementById("openVoiceBtn");
-const overlay = document.getElementById("voiceOverlay");
-const closeBtn = document.getElementById("voiceCloseBtn");
-const startBtn = document.getElementById("voiceStartBtn");
-const muteBtn = document.getElementById("voiceMuteBtn");
-const stopBtn = document.getElementById("voiceStopBtn");
-const statusText = document.getElementById("voiceStatus");
-const orb = document.getElementById("voiceOrb");
+    const openBtn = document.getElementById("openVoiceBtn");
+    const overlay = document.getElementById("voiceOverlay");
+    const closeBtn = document.getElementById("voiceCloseBtn");
+    const startBtn = document.getElementById("voiceStartBtn");
+    const muteBtn = document.getElementById("voiceMuteBtn");
+    const stopBtn = document.getElementById("voiceStopBtn");
+    const statusText = document.getElementById("voiceStatus");
 
-if (
-!openBtn || !overlay || !closeBtn || !startBtn ||
-!muteBtn || !stopBtn || !statusText || !orb
-) {
-console.warn(
-"Voice chat elements are missing. Check the voice HTML IDs."
-);
-return;
-}
+    if (
+        !openBtn || !overlay || !closeBtn || !startBtn ||
+        !muteBtn || !stopBtn || !statusText
+    ) {
+        console.warn("Voice chat HTML elements are missing. Check their IDs.");
+        return;
+    }
 
-let socket = null;
-let microphoneStream = null;
-let audioContext = null;
-let microphoneSource = null;
-let microphoneProcessor = null;
-let silentGain = null;
+    let socket = null;
+    let microphoneStream = null;
+    let audioContext = null;
+    let microphoneSource = null;
+    let microphoneProcessor = null;
+    let silentGain = null;
 
-let isStarting = false;
-let isMuted = false;
-let setupFinished = false;
-let nextPlaybackTime = 0;
+    let isStarting = false;
+    let isMuted = false;
+    let setupFinished = false;
+    let nextPlaybackTime = 0;
 
-function setStatus(message) {
-statusText.textContent = message;
-}
+    function setStatus(message) {
+        statusText.textContent = message;
+    }
 
-function setButtons(active) {
-startBtn.disabled = active;
-muteBtn.disabled = !active;
-stopBtn.disabled = !active;
-}
+    function setButtons(isActive) {
+        startBtn.disabled = isActive;
+        muteBtn.disabled = !isActive;
+        stopBtn.disabled = !isActive;
+    }
 
-function showVoiceScreen() {
-overlay.hidden = false;
-setStatus("Press Start to begin.");
-}
+    function bytesToBase64(bytes) {
+        let binary = "";
+        const chunkSize = 0x8000;
 
-function hideVoiceScreen() {
-stopVoiceChat();
-overlay.hidden = true;
-}
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+            binary += String.fromCharCode(
+                ...bytes.subarray(i, i + chunkSize)
+            );
+        }
 
-function bytesToBase64(bytes) {
-let binary = "";
-const chunkSize = 0x8000;
+        return btoa(binary);
+    }
 
-for (let i = 0; i < bytes.length; i += chunkSize) {
-binary += String.fromCharCode(
-...bytes.subarray(i, i + chunkSize)
-);
-}
+    function base64ToBytes(base64) {
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
 
-return btoa(binary);
-}
+        for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
 
-function base64ToBytes(base64) {
-const binary = atob(base64);
-const bytes = new Uint8Array(binary.length);
+        return bytes;
+    }
 
-for (let i = 0; i < binary.length; i++) {
-bytes[i] = binary.charCodeAt(i);
-}
+    function resampleTo16k(input, inputRate) {
+        const outputRate = 16000;
 
-return bytes;
-}
+        if (inputRate === outputRate) {
+            return input;
+        }
 
-function resampleTo16k(input, inputRate) {
-const outputRate = 16000;
+        const ratio = inputRate / outputRate;
+        const outputLength = Math.floor(input.length / ratio);
+        const output = new Float32Array(outputLength);
 
-if (inputRate === outputRate) {
-return input;
-}
+        for (let i = 0; i < outputLength; i++) {
+            const position = i * ratio;
+            const left = Math.floor(position);
+            const right = Math.min(left + 1, input.length - 1);
+            const fraction = position - left;
 
-const ratio = inputRate / outputRate;
-const outputLength = Math.floor(input.length / ratio);
-const output = new Float32Array(outputLength);
+            output[i] =
+                input[left] * (1 - fraction) +
+                input[right] * fraction;
+        }
 
-for (let i = 0; i < outputLength; i++) {
-const position = i * ratio;
-const left = Math.floor(position);
-const right = Math.min(left + 1, input.length - 1);
-const fraction = position - left;
+        return output;
+    }
 
-output[i] =
-input[left] * (1 - fraction) +
-input[right] * fraction;
-}
+    function floatToPcm16(samples) {
+        const pcm = new Int16Array(samples.length);
 
-return output;
-}
+        for (let i = 0; i < samples.length; i++) {
+            const sample = Math.max(-1, Math.min(1, samples[i]));
 
-function floatToPcm16(samples) {
-const pcm = new Int16Array(samples.length);
+            pcm[i] = sample < 0
+                ? sample * 0x8000
+                : sample * 0x7fff;
+        }
 
-for (let i = 0; i < samples.length; i++) {
-const sample = Math.max(-1, Math.min(1, samples[i]));
+        return new Uint8Array(pcm.buffer);
+    }
 
-pcm[i] = sample < 0
-? sample * 0x8000
-: sample * 0x7fff;
-}
+    function sendMicrophoneAudio(samples) {
+        if (
+            !socket ||
+            socket.readyState !== WebSocket.OPEN ||
+            !setupFinished ||
+            isMuted
+        ) {
+            return;
+        }
 
-return new Uint8Array(pcm.buffer);
-}
+        const resampled = resampleTo16k(
+            samples,
+            audioContext.sampleRate
+        );
 
-function sendMicrophoneAudio(samples) {
-if (
-!socket ||
-socket.readyState !== WebSocket.OPEN ||
-!setupFinished ||
-isMuted
-) {
-return;
-}
+        const pcmBytes = floatToPcm16(resampled);
 
-const resampled = resampleTo16k(
-samples,
-audioContext.sampleRate
-);
+        socket.send(JSON.stringify({
+            realtimeInput: {
+                audio: {
+                    mimeType: "audio/pcm;rate=16000",
+                    data: bytesToBase64(pcmBytes)
+                }
+            }
+        }));
+    }
 
-const pcmBytes = floatToPcm16(resampled);
+    function playGeminiAudio(base64Audio) {
+        if (!audioContext || audioContext.state === "closed") {
+            return;
+        }
 
-socket.send(JSON.stringify({
-realtimeInput: {
-audio: {
-mimeType: "audio/pcm;rate=16000",
-data: bytesToBase64(pcmBytes)
-}
-}
-}));
-}
+        const bytes = base64ToBytes(base64Audio);
+        const usableLength = bytes.byteLength - (bytes.byteLength % 2);
 
-function playGeminiAudio(base64Audio) {
-if (!audioContext || audioContext.state === "closed") {
-return;
-}
+        if (!usableLength) {
+            return;
+        }
 
-const bytes = base64ToBytes(base64Audio);
-const usableLength = bytes.byteLength - (bytes.byteLength % 2);
+        const pcm = new Int16Array(
+            bytes.buffer,
+            bytes.byteOffset,
+            usableLength / 2
+        );
 
-if (!usableLength) {
-return;
-}
+        const audioBuffer = audioContext.createBuffer(
+            1,
+            pcm.length,
+            24000
+        );
 
-const pcm = new Int16Array(
-bytes.buffer,
-bytes.byteOffset,
-usableLength / 2
-);
+        const channel = audioBuffer.getChannelData(0);
 
-const audioBuffer = audioContext.createBuffer(
-1,
-pcm.length,
-24000
-);
+        for (let i = 0; i < pcm.length; i++) {
+            channel[i] = pcm[i] / 32768;
+        }
 
-const channel = audioBuffer.getChannelData(0);
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(audioContext.destination);
 
-for (let i = 0; i < pcm.length; i++) {
-channel[i] = pcm[i] / 32768;
-}
+        const startAt = Math.max(
+            audioContext.currentTime,
+            nextPlaybackTime
+        );
 
-const source = audioContext.createBufferSource();
-source.buffer = audioBuffer;
-source.connect(audioContext.destination);
+        source.start(startAt);
+        nextPlaybackTime = startAt + audioBuffer.duration;
+    }
 
-const startAt = Math.max(
-audioContext.currentTime,
-nextPlaybackTime
-);
+    function startMicrophone() {
+        microphoneSource =
+            audioContext.createMediaStreamSource(microphoneStream);
 
-source.start(startAt);
-nextPlaybackTime = startAt + audioBuffer.duration;
-}
+        microphoneProcessor =
+            audioContext.createScriptProcessor(4096, 1, 1);
 
-function startMicrophone() {
-microphoneSource =
-audioContext.createMediaStreamSource(microphoneStream);
+        microphoneProcessor.onaudioprocess = function (event) {
+            const inputSamples =
+                event.inputBuffer.getChannelData(0);
 
-microphoneProcessor =
-audioContext.createScriptProcessor(4096, 1, 1);
+            sendMicrophoneAudio(new Float32Array(inputSamples));
+        };
 
-microphoneProcessor.onaudioprocess = (event) => {
-const input = event.inputBuffer.getChannelData(0);
-sendMicrophoneAudio(new Float32Array(input));
-};
+        // Keep the microphone processor running without outputting mic audio.
+        silentGain = audioContext.createGain();
+        silentGain.gain.value = 0;
 
-// Keep the processor running without playing microphone audio.
-silentGain = audioContext.createGain();
-silentGain.gain.value = 0;
+        microphoneSource.connect(microphoneProcessor);
+        microphoneProcessor.connect(silentGain);
+        silentGain.connect(audioContext.destination);
+    }
 
-microphoneSource.connect(microphoneProcessor);
-microphoneProcessor.connect(silentGain);
-silentGain.connect(audioContext.destination);
-}
+    function stopVoiceChat() {
+        setupFinished = false;
 
-function handleGeminiMessage(event) {
-let data;
+        const oldSocket = socket;
+        socket = null;
 
-try {
-data = JSON.parse(event.data);
-} catch {
-console.warn("Received an unreadable Gemini voice message.");
-return;
-}
+        if (
+            oldSocket &&
+            (
+                oldSocket.readyState === WebSocket.OPEN ||
+                oldSocket.readyState === WebSocket.CONNECTING
+            )
+        ) {
+            oldSocket.close();
+        }
 
-if (data.setupComplete) {
-setupFinished = true;
+        if (microphoneProcessor) {
+            microphoneProcessor.disconnect();
+            microphoneProcessor.onaudioprocess = null;
+            microphoneProcessor = null;
+        }
 
-try {
-startMicrophone();
-setButtons(true);
-setStatus("Listening… Speak naturally.");
-} catch (error) {
-console.error("Microphone setup failed:", error);
-setStatus("Could not start the microphone.");
-stopVoiceChat();
-}
+        if (microphoneSource) {
+            microphoneSource.disconnect();
+            microphoneSource = null;
+        }
 
-return;
-}
+        if (silentGain) {
+            silentGain.disconnect();
+            silentGain = null;
+        }
 
-if (data.serverContent) {
-const content = data.serverContent;
+        if (microphoneStream) {
+            microphoneStream.getTracks().forEach(function (track) {
+                track.stop();
+            });
+            microphoneStream = null;
+        }
 
-if (content.modelTurn?.parts) {
-for (const part of content.modelTurn.parts) {
-if (
-part.inlineData?.mimeType?.startsWith("audio/pcm") &&
-typeof part.inlineData.data === "string"
-) {
-playGeminiAudio(part.inlineData.data);
-}
-}
-}
+        if (audioContext && audioContext.state !== "closed") {
+            audioContext.close();
+        }
 
-if (content.turnComplete) {
-setStatus("Listening… Speak whenever you're ready.");
-}
-}
+        audioContext = null;
+        nextPlaybackTime = 0;
+        isMuted = false;
 
-if (data.error) {
-console.error("Gemini Live error:", data.error);
-setStatus(
-data.error.message || "Gemini voice chat returned an error."
-);
-}
-}
+        muteBtn.textContent = "Mute";
+        setButtons(false);
+    }
 
-async function startVoiceChat() {
-if (isStarting || socket) {
-return;
-}
+    function handleGeminiMessage(event) {
+        let data;
 
-isStarting = true;
-setupFinished = false;
-startBtn.disabled = true;
-setStatus("Connecting to Gemini…");
+        try {
+            data = JSON.parse(event.data);
+        } catch (error) {
+            console.warn("Could not read Gemini voice message.", error);
+            return;
+        }
 
-try {
-if (!navigator.mediaDevices?.getUserMedia) {
-throw new Error(
-"Microphone access is unavailable. Open the website using HTTPS."
-);
-}
+        if (data.setupComplete) {
+            setupFinished = true;
 
-// Get a short-lived token from the Cloudflare Worker.
-const tokenResponse = await fetch(
-${WORKER_URL}/voice-token,
-{
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({})
-}
-);
+            try {
+                startMicrophone();
+                setButtons(true);
+                setStatus("Listening… Speak naturally.");
+            } catch (error) {
+                console.error("Microphone setup failed:", error);
+                setStatus("Could not start the microphone.");
+                stopVoiceChat();
+            }
 
-const tokenData = await tokenResponse.json();
+            return;
+        }
 
-if (!tokenResponse.ok || !tokenData.token) {
-throw new Error(
-tokenData.error || "Could not get a Gemini voice token."
-);
-}
+        if (data.serverContent) {
+            const content = data.serverContent;
 
-// Ask the browser for microphone permission.
-microphoneStream = await navigator.mediaDevices.getUserMedia({
-audio: {
-echoCancellation: true,
-noiseSuppression: true,
-autoGainControl: true
-}
+            if (content.modelTurn && content.modelTurn.parts) {
+                content.modelTurn.parts.forEach(function (part) {
+                    if (
+                        part.inlineData &&
+                        part.inlineData.mimeType &&
+                        part.inlineData.mimeType.startsWith("audio/pcm") &&
+                        typeof part.inlineData.data === "string"
+                    ) {
+                        playGeminiAudio(part.inlineData.data);
+                    }
+                });
+            }
+
+            if (content.turnComplete) {
+                setStatus("Listening… Speak whenever you're ready.");
+            }
+        }
+
+        if (data.error) {
+            console.error("Gemini Live error:", data.error);
+            setStatus(
+                data.error.message || "Gemini voice chat returned an error."
+            );
+        }
+    }
+
+    async function startVoiceChat() {
+        if (isStarting || socket) {
+            return;
+        }
+
+        isStarting = true;
+        setupFinished = false;
+        startBtn.disabled = true;
+        setStatus("Connecting to Gemini…");
+
+        try {
+            if (!navigator.mediaDevices?.getUserMedia) {
+                throw new Error(
+                    "Microphone access needs a secure HTTPS connection."
+                );
+            }
+
+            // Get a short-lived token from your Cloudflare Worker.
+            const tokenResponse = await fetch(
+                `${WORKER_URL}/voice-token`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({})
+                }
+            );
+
+            const tokenData = await tokenResponse.json();
+
+            if (!tokenResponse.ok || !tokenData.token) {
+                throw new Error(
+                    tokenData.error || "Could not get a Gemini voice token."
+                );
+            }
+
+            microphoneStream =
+                await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+
+            audioContext = new AudioContext();
+            await audioContext.resume();
+
+            const wsUrl =
+                "wss://generativelanguage.googleapis.com/ws/" +
+                "google.ai.generativelanguage.v1alpha.GenerativeService." +
+                "BidiGenerateContentConstrained?access_token=" +
+                encodeURIComponent(tokenData.token);
+
+            socket = new WebSocket(wsUrl);
+
+            socket.onopen = function () {
+                setStatus("Setting up voice chat…");
+
+                socket.send(JSON.stringify({
+                    setup: {
+                        model: LIVE_MODEL,
+                        generationConfig: {
+                            responseModalities: ["AUDIO"],
+                            speechConfig: {
+                                voiceConfig: {
+                                    prebuiltVoiceConfig: {
+                                        voiceName: "Kore"
+                                    }
+                                }
+                            }
+                        },
+                        systemInstruction: {
+                            parts: [{
+                                text:
+                                    "You are a helpful voice assistant. " +
+                                    "Answer naturally and clearly. " +
+                                    "Keep spoken answers concise unless " +
+                                    "the user asks for more detail."
+                            }]
+                        }
+                    }
+                }));
+            };
+
+            socket.onmessage = handleGeminiMessage;
+
+            socket.onerror = function () {
+                setStatus("Voice connection error. Please try again.");
+            };
+
+            socket.onclose = function (event) {
+                console.warn(
+                    "Gemini voice connection closed:",
+                    event.code,
+                    event.reason
+                );
+
+                stopVoiceChat();
+                setStatus("Voice chat ended. Press Start to reconnect.");
+            };
+
+        } catch (error) {
+            console.error("Could not start voice chat:", error);
+            setStatus(error.message || "Could not start voice chat.");
+            stopVoiceChat();
+
+        } finally {
+            isStarting = false;
+
+            if (!socket) {
+                startBtn.disabled = false;
+            }
+        }
+    }
+
+    openBtn.addEventListener("click", function () {
+        overlay.hidden = false;
+        setStatus("Press Start to begin.");
+    });
+
+    closeBtn.addEventListener("click", function () {
+        stopVoiceChat();
+        overlay.hidden = true;
+    });
+
+    startBtn.addEventListener("click", startVoiceChat);
+
+    stopBtn.addEventListener("click", function () {
+        stopVoiceChat();
+        setStatus("Voice chat stopped.");
+    });
+
+    muteBtn.addEventListener("click", function () {
+        if (!microphoneStream) {
+            return;
+        }
+
+        isMuted = !isMuted;
+
+        microphoneStream.getAudioTracks().forEach(function (track) {
+            track.enabled = !isMuted;
+        });
+
+        muteBtn.textContent = isMuted ? "Unmute" : "Mute";
+
+        setStatus(
+            isMuted
+                ? "Microphone muted."
+                : "Listening… Speak naturally."
+        );
+    });
+
+    setButtons(false);
 });
-
-audioContext = new AudioContext();
-await audioContext.resume();
-
-const wsUrl =
-"wss://generativelanguage.googleapis.com/ws/" +
-"google.ai.generativelanguage.v1alpha.GenerativeService." +
-"BidiGenerateContentConstrained?access_token=" +
-encodeURIComponent(tokenData.token);
-
-socket = new WebSocket(wsUrl);
-
-socket.onopen = () => {
-setStatus("Setting up voice chat…");
-
-socket.send(JSON.stringify({
-setup: {
-model: LIVE_MODEL,
-generationConfig: {
-responseModalities: ["AUDIO"],
-speechConfig: {
-voiceConfig: {
-prebuiltVoiceConfig: {
-voiceName: "Kore"
-}
-}
-}
-},
-systemInstruction: {
-parts: [{
-text:
-"You are a helpful and friendly voice assistant. " +
-"Answer naturally and clearly. " +
-"Keep spoken answers concise unless the user asks for detail."
-}]
-}
-}
-}));
-};
-
-socket.onmessage = handleGeminiMessage;
-
-socket.onerror = () => {
-setStatus("Voice connection error. Please try again.");
-};
-
-socket.onclose = (event) => {
-console.warn(
-"Gemini voice connection closed:",
-event.code,
-event.reason
-);
-
-stopVoiceChat();
-setStatus("Voice chat ended. Press Start to reconnect.");
-};
-
-} catch (error) {
-console.error("Could not start voice chat:", error);
-setStatus(error.message || "Could not start voice chat.");
-stopVoiceChat();
-} finally {
-isStarting = false;
-
-if (!socket) {
-startBtn.disabled = false;
-}
-}
-}
-
-function stopVoiceChat() {
-setupFinished = false;
-
-const oldSocket = socket;
-socket = null;
-
-if (
-oldSocket &&
-(
-oldSocket.readyState === WebSocket.OPEN ||
-oldSocket.readyState === WebSocket.CONNECTING
-)
-) {
-oldSocket.close();
-}
-
-if (microphoneProcessor) {
-microphoneProcessor.disconnect();
-microphoneProcessor.onaudioprocess = null;
-microphoneProcessor = null;
-}
-
-if (microphoneSource) {
-microphoneSource.disconnect();
-microphoneSource = null;
-}
-
-if (silentGain) {
-silentGain.disconnect();
-silentGain = null;
-}
-
-if (microphoneStream) {
-microphoneStream.getTracks().forEach(track => track.stop());
-microphoneStream = null;
-}
-
-if (audioContext && audioContext.state !== "closed") {
-audioContext.close();
-}
-
-audioContext = null;
-nextPlaybackTime = 0;
-isMuted = false;
-
-muteBtn.textContent = "Mute";
-setButtons(false);
-}
-
-openBtn.addEventListener("click", showVoiceScreen);
-closeBtn.addEventListener("click", hideVoiceScreen);
-startBtn.addEventListener("click", startVoiceChat);
-stopBtn.addEventListener("click", () => {
-stopVoiceChat();
-setStatus("Voice chat stopped.");
-});
-
-muteBtn.addEventListener("click", () => {
-if (!microphoneStream) {
-return;
-}
-
-isMuted = !isMuted;
-
-microphoneStream.getAudioTracks().forEach(track => {
-track.enabled = !isMuted;
-});
-
-muteBtn.textContent = isMuted ? "Unmute" : "Mute";
-setStatus(isMuted ? "Microphone muted." : "Listening… Speak naturally.");
-});
-
-setButtons(false);
-})();
