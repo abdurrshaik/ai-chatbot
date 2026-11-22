@@ -1333,3 +1333,52 @@ body {
     flex: 1;
     min-width: 0;
 }
+
+/* =====================================
+   MOBILE KEYBOARD INPUT POSITION
+===================================== */
+
+@media screen and (max-width: 768px) {
+
+    .app {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    .main {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .messages {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    .input-area {
+        flex-shrink: 0;
+        position: sticky;
+        bottom: 0;
+        width: 100%;
+        background: inherit;
+        z-index: 10;
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .chat-form {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .chat-input {
+        min-width: 0;
+        max-height: 120px;
+        overflow-y: auto;
+    }
+
+}
