@@ -7,7 +7,10 @@ import {
 } from "./firebase.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Login popup elements
+    // =========================================
+    // FIREBASE AUTHENTICATION ELEMENTS
+    // =========================================
+
     const authModal = document.getElementById("authModal");
     const openSignInBtn = document.getElementById("openSignInBtn");
     const openLoginBtn = document.getElementById("openLoginBtn");
@@ -16,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const authDescription = document.getElementById("authDescription");
     const authForm = document.getElementById("authForm");
 
-    // Firebase account elements
     const authEmail = document.getElementById("authEmail");
     const authPassword = document.getElementById("authPassword");
     const signUpBtn = document.getElementById("signUpBtn");
@@ -74,7 +76,35 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Create a new Firebase account
+    function getAuthErrorMessage(code) {
+        const messages = {
+            "auth/invalid-email":
+                "Please enter a valid email address.",
+
+            "auth/email-already-in-use":
+                "This email already has an account. Please log in.",
+
+            "auth/weak-password":
+                "Choose a stronger password with at least 6 characters.",
+
+            "auth/invalid-credential":
+                "Email or password is incorrect.",
+
+            "auth/too-many-requests":
+                "Too many attempts. Please try again later.",
+
+            "auth/network-request-failed":
+                "Network error. Check your internet connection.",
+
+            "auth/operation-not-allowed":
+                "Email/password sign-in is not enabled in Firebase."
+        };
+
+        return messages[code] ||
+            "Something went wrong. Please try again.";
+    }
+
+    // Create a new Firebase account.
     if (signUpBtn) {
         signUpBtn.addEventListener("click", async function () {
             const email = authEmail ? authEmail.value.trim() : "";
@@ -117,16 +147,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (authPassword) authPassword.value = "";
 
             } catch (error) {
-    console.error("Image reading error:", error);
-    console.error("Selected file:", file);
+                console.error("Firebase sign-up error:", error);
 
-    setAttachmentStatus(
-        "Could not read image: " + (error.message || "Unknown error"),
-        true
-    );
-}
+                if (authStatus) {
+                    authStatus.textContent =
+                        getAuthErrorMessage(error.code);
+                }
 
-    // Log in when the popup form is submitted
+            } finally {
+                signUpBtn.disabled = false;
+            }
+        });
+    }
+
+    // Log in when the popup form is submitted.
     if (authForm) {
         authForm.addEventListener("submit", async function (event) {
             event.preventDefault();
@@ -142,10 +176,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            try {
-                const loginButton =
-                    document.getElementById("loginBtn");
+            const loginButton = document.getElementById("loginBtn");
 
+            try {
                 if (loginButton) loginButton.disabled = true;
 
                 if (authStatus) {
@@ -173,15 +206,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
             } finally {
-                const loginButton =
-                    document.getElementById("loginBtn");
-
                 if (loginButton) loginButton.disabled = false;
             }
         });
     }
 
-    // Log out
+    // Log out.
     if (logoutBtn) {
         logoutBtn.addEventListener("click", async function () {
             try {
@@ -202,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Update popup when Firebase authentication changes
+    // Update the popup when Firebase authentication changes.
     onAuthStateChanged(auth, function (user) {
         if (user) {
             if (loggedOutView) loggedOutView.hidden = true;
@@ -226,44 +256,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    function getAuthErrorMessage(code) {
-        const messages = {
-            "auth/invalid-email":
-                "Please enter a valid email address.",
 
-            "auth/email-already-in-use":
-                "This email already has an account. Please log in.",
+    // =========================================
+    // CHATBOT ELEMENTS
+    // =========================================
 
-            "auth/weak-password":
-                "Choose a stronger password with at least 6 characters.",
-
-            "auth/invalid-credential":
-                "Email or password is incorrect.",
-
-            "auth/too-many-requests":
-                "Too many attempts. Please try again later.",
-
-            "auth/network-request-failed":
-                "Network error. Check your internet connection.",
-
-            "auth/operation-not-allowed":
-                "Email/password sign-in is not enabled in Firebase."
-        };
-
-        return messages[code] ||
-            "Something went wrong. Please try again.";
-    }
-
-    // Chatbot elements
     const form = document.getElementById("chatForm");
     const input = document.getElementById("userInput");
     const messages = document.getElementById("messages");
 
     const attachBtn = document.getElementById("attachBtn");
     const attachmentMenu = document.getElementById("attachmentMenu");
+
     const cameraInput = document.getElementById("cameraInput");
     const photosInput = document.getElementById("photosInput");
     const filesInput = document.getElementById("filesInput");
+
     const cameraOption = document.getElementById("cameraOption");
     const photosOption = document.getElementById("photosOption");
     const filesOption = document.getElementById("filesOption");
@@ -282,6 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "https://my-ai-chatbot-api.abdurrshaik.workers.dev/";
 
     const STORAGE_KEY = "aiChatbotConversationsV1";
+
     const MAX_IMAGES = 3;
     const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
@@ -295,22 +304,35 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedImages = [];
     let isSending = false;
 
-    // Image previews appear above the message composer.
-    const previewArea = document.createElement("div");
-    previewArea.className = "attachment-preview";
-    previewArea.id = "attachmentPreview";
+
+    // =========================================
+    // IMAGE PREVIEW AREA
+    // =========================================
+
+    const inputArea = document.querySelector(".input-area");
+
+    let previewArea = document.getElementById("attachmentPreview");
+
+    if (!previewArea) {
+        previewArea = document.createElement("div");
+        previewArea.id = "attachmentPreview";
+        previewArea.className = "attachment-preview";
+    }
+
     previewArea.setAttribute(
         "aria-label",
         "Selected image attachments"
     );
 
-    const inputArea = document.querySelector(".input-area");
-
-    if (inputArea) {
+    if (inputArea && form) {
         inputArea.insertBefore(previewArea, form);
     }
 
-    // Accessible status messages.
+
+    // =========================================
+    // ATTACHMENT STATUS MESSAGE
+    // =========================================
+
     let attachmentStatus =
         document.getElementById("attachmentStatus");
 
@@ -323,15 +345,22 @@ document.addEventListener("DOMContentLoaded", function () {
         attachmentStatus.style.maxWidth = "900px";
         attachmentStatus.style.overflowWrap = "anywhere";
 
-        if (inputArea) {
+        if (inputArea && form) {
             inputArea.insertBefore(attachmentStatus, form);
         }
     }
 
     function setAttachmentStatus(text, isError) {
+        if (!attachmentStatus) return;
+
         attachmentStatus.textContent = text || "";
         attachmentStatus.style.color = isError ? "#dc2626" : "";
     }
+
+
+    // =========================================
+    // ATTACHMENT MENU
+    // =========================================
 
     function closeAttachmentMenu() {
         if (!attachmentMenu || !attachBtn) return;
@@ -389,12 +418,20 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+
+    // =========================================
+    // IMAGE READING AND VALIDATION
+    // =========================================
+
     function getImageType(file) {
         if (ALLOWED_IMAGE_TYPES.includes(file.type)) {
             return file.type;
         }
 
-        const extension = file.name.split(".").pop().toLowerCase();
+        const extension = file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
 
         const types = {
             jpg: "image/jpeg",
@@ -408,34 +445,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function readImageAsDataURL(file) {
-    return new Promise(function (resolve, reject) {
-        if (!(file instanceof Blob)) {
-            reject(new Error("The selected item is not a valid file."));
-            return;
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = function () {
-            if (typeof reader.result === "string") {
-                resolve(reader.result);
-            } else {
-                reject(new Error("The image data could not be read."));
+        return new Promise(function (resolve, reject) {
+            if (!(file instanceof Blob)) {
+                reject(new Error("The selected item is not a valid file."));
+                return;
             }
-        };
 
-        reader.onerror = function () {
-            reject(reader.error || new Error("The browser could not read this file."));
-        };
+            const reader = new FileReader();
 
-        reader.onabort = function () {
-            reject(new Error("Reading the image was cancelled."));
-        };
+            reader.onload = function () {
+                if (typeof reader.result === "string") {
+                    resolve(reader.result);
+                } else {
+                    reject(new Error("The image data could not be read."));
+                }
+            };
 
-        reader.readAsDataURL(file);
-    });
-}
-        // Handle selected images
+            reader.onerror = function () {
+                reject(
+                    reader.error ||
+                    new Error("The browser could not read this file.")
+                );
+            };
+
+            reader.onabort = function () {
+                reject(new Error("Reading the image was cancelled."));
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
     async function handleSelectedFiles(fileList) {
         const files = Array.from(fileList || []);
 
@@ -495,11 +535,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     selectedImages.length + " image(s) attached.",
                     false
                 );
+
             } catch (error) {
                 console.error("Image reading error:", error);
+                console.error("Selected file:", file);
 
                 setAttachmentStatus(
-                    "Could not read " + file.name + ". Please try again.",
+                    "Could not read image: " +
+                    (error.message || "Unknown error"),
                     true
                 );
             }
@@ -507,6 +550,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderImagePreviews() {
+        if (!previewArea) return;
+
         previewArea.replaceChildren();
 
         selectedImages.forEach(function (image, index) {
@@ -515,21 +560,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const img = document.createElement("img");
 
-img.src = image.dataURL;
-img.alt = image.name || "Attached image";
-img.loading = "lazy";
+            img.src = image.dataURL;
+            img.alt = image.name || "Attached image";
+            img.loading = "lazy";
 
-// Limit the displayed image size
-img.style.setProperty("display", "block", "important");
-img.style.setProperty("width", "auto", "important");
-img.style.setProperty("height", "auto", "important");
-img.style.setProperty("max-width", "320px", "important");
-img.style.setProperty("max-height", "300px", "important");
-img.style.setProperty("object-fit", "contain");
-
-imageContainer.appendChild(img);
+            img.style.setProperty("display", "block", "important");
+            img.style.setProperty("width", "auto", "important");
+            img.style.setProperty("height", "auto", "important");
+            img.style.setProperty("max-width", "320px", "important");
+            img.style.setProperty("max-height", "300px", "important");
+            img.style.setProperty("object-fit", "contain");
 
             const removeButton = document.createElement("button");
+
             removeButton.type = "button";
             removeButton.textContent = "×";
             removeButton.setAttribute(
@@ -539,6 +582,7 @@ imageContainer.appendChild(img);
 
             removeButton.addEventListener("click", function () {
                 selectedImages.splice(index, 1);
+
                 renderImagePreviews();
 
                 setAttachmentStatus(
@@ -554,6 +598,8 @@ imageContainer.appendChild(img);
 
             previewArea.appendChild(preview);
         });
+
+        previewArea.hidden = selectedImages.length === 0;
     }
 
     [cameraInput, photosInput, filesInput].forEach(function (fileInput) {
@@ -567,95 +613,90 @@ imageContainer.appendChild(img);
         });
     });
 
-    // Mobile sidebar
-function closeSidebar() {
-    if (!sidebar || !app) return;
 
-    sidebar.classList.remove("sidebar-open");
-    app.classList.remove("sidebar-visible");
+    // =========================================
+    // MOBILE SIDEBAR
+    // =========================================
 
-    if (sidebarToggle) {
-        sidebarToggle.setAttribute("aria-expanded", "false");
-    }
-}
+    function closeSidebar() {
+        if (!sidebar || !app) return;
 
-function toggleSidebar() {
-    if (!sidebar || !app) return;
-
-    const isOpen = sidebar.classList.contains("sidebar-open");
-
-    if (isOpen) {
-        closeSidebar();
-    } else {
-        sidebar.classList.add("sidebar-open");
-        app.classList.add("sidebar-visible");
+        sidebar.classList.remove("sidebar-open");
+        app.classList.remove("sidebar-visible");
 
         if (sidebarToggle) {
-            sidebarToggle.setAttribute("aria-expanded", "true");
+            sidebarToggle.setAttribute("aria-expanded", "false");
         }
     }
-}
 
-function closeSidebar() {
-    if (!sidebar || !app) return;
+    function toggleSidebar() {
+        if (!sidebar || !app) return;
 
-    sidebar.classList.remove("sidebar-open");
-    app.classList.remove("sidebar-visible");
+        const isOpen = sidebar.classList.contains("sidebar-open");
+
+        if (isOpen) {
+            closeSidebar();
+        } else {
+            sidebar.classList.add("sidebar-open");
+            app.classList.add("sidebar-visible");
+
+            if (sidebarToggle) {
+                sidebarToggle.setAttribute("aria-expanded", "true");
+            }
+        }
+    }
+
+    if (sidebar && app) {
+        sidebar.classList.add("sidebar-open");
+        app.classList.add("sidebar-visible");
+    }
 
     if (sidebarToggle) {
-        sidebarToggle.setAttribute("aria-expanded", "false");
+        sidebarToggle.setAttribute("aria-expanded", "true");
+        sidebarToggle.addEventListener("click", toggleSidebar);
     }
-}
 
-/* Initialize sidebar in the open state */
-if (sidebar && app) {
-    sidebar.classList.add("sidebar-open");
-    app.classList.add("sidebar-visible");
-}
+    document.addEventListener("click", function (event) {
+        if (!sidebar || !sidebarToggle) return;
+        if (window.innerWidth > 768) return;
 
-if (sidebarToggle) {
-    sidebarToggle.setAttribute("aria-expanded", "true");
-    sidebarToggle.addEventListener("click", toggleSidebar);
-}
+        const isOpen = sidebar.classList.contains("sidebar-open");
 
-// Close the sidebar when clicking outside it on mobile.
-document.addEventListener("click", function (event) {
-    if (!sidebar || !sidebarToggle) return;
+        if (!isOpen) return;
 
-    if (window.innerWidth > 768) return;
+        if (
+            !sidebar.contains(event.target) &&
+            !sidebarToggle.contains(event.target)
+        ) {
+            closeSidebar();
+        }
+    });
 
-    const isOpen = sidebar.classList.contains("sidebar-open");
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeSidebar();
+        }
+    });
 
-    if (!isOpen) return;
+    window.addEventListener("resize", function () {
+        if (window.innerWidth > 768) {
+            closeSidebar();
+        }
+    });
 
-    if (
-        !sidebar.contains(event.target) &&
-        !sidebarToggle.contains(event.target)
-    ) {
-        closeSidebar();
-    }
-});
 
-// Close the sidebar using Escape.
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-        closeSidebar();
-    }
-});
+    // =========================================
+    // CONVERSATION DATA
+    // =========================================
 
-// Close the sidebar when returning to desktop layout.
-window.addEventListener("resize", function () {
-    if (window.innerWidth > 768) {
-        closeSidebar();
-    }
-});
-
-    // Conversation data
     let conversations = [];
     let currentChatId = null;
 
     function createChatId() {
-        if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        if (
+            window.crypto &&
+            typeof window.crypto.randomUUID === "function"
+        ) {
             return window.crypto.randomUUID();
         }
 
@@ -682,6 +723,7 @@ window.addEventListener("resize", function () {
                     Array.isArray(chat.messages)
                 );
             });
+
         } catch (error) {
             console.error("Could not load chat history:", error);
             return [];
@@ -694,6 +736,7 @@ window.addEventListener("resize", function () {
                 STORAGE_KEY,
                 JSON.stringify(conversations)
             );
+
         } catch (error) {
             console.error("Could not save chat history:", error);
 
@@ -722,13 +765,13 @@ window.addEventListener("resize", function () {
         conversations.unshift(chat);
         currentChatId = chat.id;
 
-        saveConversations();
-        renderChatHistory();
-        renderCurrentChat();
-
         selectedImages = [];
         renderImagePreviews();
         setAttachmentStatus("", false);
+
+        saveConversations();
+        renderChatHistory();
+        renderCurrentChat();
 
         if (input) input.focus();
 
@@ -747,7 +790,11 @@ window.addEventListener("resize", function () {
             : cleaned;
     }
 
-    // Build a safe message element.
+
+    // =========================================
+    // DISPLAY CHAT MESSAGES
+    // =========================================
+
     function createMessageElement(message) {
         const wrapper = document.createElement("div");
 
@@ -761,7 +808,6 @@ window.addEventListener("resize", function () {
             const textElement = document.createElement("div");
             textElement.className = "message-text";
 
-            // Render Markdown safely when the libraries are available.
             if (
                 message.role !== "user" &&
                 typeof marked !== "undefined" &&
@@ -794,8 +840,14 @@ window.addEventListener("resize", function () {
                 img.alt = image.name || "Attached image";
                 img.loading = "lazy";
 
-                
-                preview.appendChild(img);
+                img.style.setProperty("display", "block", "important");
+                img.style.setProperty("width", "auto", "important");
+                img.style.setProperty("height", "auto", "important");
+                img.style.setProperty("max-width", "320px", "important");
+                img.style.setProperty("max-height", "300px", "important");
+                img.style.setProperty("object-fit", "contain");
+
+                imageContainer.appendChild(img);
             });
 
             wrapper.appendChild(imageContainer);
@@ -833,6 +885,11 @@ window.addEventListener("resize", function () {
         messages.scrollTop = messages.scrollHeight;
     }
 
+
+    // =========================================
+    // CHAT HISTORY SIDEBAR
+    // =========================================
+
     function renderChatHistory() {
         const chatHistory = document.getElementById("chatHistory");
 
@@ -849,6 +906,7 @@ window.addEventListener("resize", function () {
             }
 
             const openButton = document.createElement("button");
+
             openButton.type = "button";
             openButton.className = "chat-history-open";
             openButton.textContent = chat.title || "New Chat";
@@ -857,20 +915,22 @@ window.addEventListener("resize", function () {
             openButton.addEventListener("click", function () {
                 currentChatId = chat.id;
 
-                renderChatHistory();
-                renderCurrentChat();
-
                 selectedImages = [];
                 renderImagePreviews();
                 setAttachmentStatus("", false);
+
+                renderChatHistory();
+                renderCurrentChat();
 
                 closeSidebar();
             });
 
             const deleteButton = document.createElement("button");
+
             deleteButton.type = "button";
             deleteButton.className = "chat-history-delete";
             deleteButton.textContent = "×";
+
             deleteButton.setAttribute(
                 "aria-label",
                 "Delete conversation: " + (chat.title || "New Chat")
@@ -910,11 +970,16 @@ window.addEventListener("resize", function () {
         });
     }
 
-    // Load previously saved conversations from this browser.
+
+    // =========================================
+    // LOAD SAVED CHATS
+    // =========================================
+
     conversations = loadConversations();
 
     if (conversations.length > 0) {
         currentChatId = conversations[0].id;
+
     } else {
         const firstChat = {
             id: createChatId(),
@@ -926,6 +991,7 @@ window.addEventListener("resize", function () {
 
         conversations.push(firstChat);
         currentChatId = firstChat.id;
+
         saveConversations();
     }
 
@@ -933,9 +999,17 @@ window.addEventListener("resize", function () {
     renderCurrentChat();
 
     if (newChatBtn) {
-        newChatBtn.addEventListener("click", createNewChat);
+        newChatBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            createNewChat();
+        });
     }
-        // Send a message to the AI chatbot
+
+
+    // =========================================
+    // SEND CHAT MESSAGE
+    // =========================================
+
     form.addEventListener("submit", async function (event) {
         event.preventDefault();
 
@@ -974,7 +1048,6 @@ window.addEventListener("resize", function () {
             };
         });
 
-        // Save the user's message.
         const userMessage = {
             role: "user",
             text: userText,
@@ -984,7 +1057,6 @@ window.addEventListener("resize", function () {
 
         chat.messages.push(userMessage);
 
-        // Set the conversation title from its first message.
         if (chat.messages.length === 1) {
             chat.title = getChatTitle(
                 userText || attachedImages[0]?.name || "Image Chat"
@@ -998,11 +1070,11 @@ window.addEventListener("resize", function () {
 
         renderImagePreviews();
         setAttachmentStatus("", false);
+
         saveConversations();
         renderChatHistory();
         renderCurrentChat();
 
-        // Show a temporary loading message.
         const loadingMessage = document.createElement("div");
 
         loadingMessage.className = "message bot-message";
@@ -1013,40 +1085,38 @@ window.addEventListener("resize", function () {
         messages.scrollTop = messages.scrollHeight;
 
         try {
-            // Convert conversation history into the API format.
-            // Send only the latest message to Cloudflare.
-// This prevents old image attachments from being uploaded again.
-const latestMessage = chat.messages[chat.messages.length - 1];
+            const latestMessage =
+                chat.messages[chat.messages.length - 1];
 
-const latestImages = Array.isArray(latestMessage.images)
-    ? latestMessage.images
-    : [];
+            const content = [];
 
-const content = [];
+            if (latestMessage.text) {
+                content.push({
+                    type: "text",
+                    text: latestMessage.text
+                });
+            }
 
-if (latestMessage.text) {
-    content.push({
-        type: "text",
-        text: latestMessage.text
-    });
-}
+            const latestImages = Array.isArray(latestMessage.images)
+                ? latestMessage.images
+                : [];
 
-latestImages.forEach(function (image) {
-    if (!image || !image.dataURL) return;
+            latestImages.forEach(function (image) {
+                if (!image || !image.dataURL) return;
 
-    content.push({
-        type: "image_url",
-        image_url: {
-            url: image.dataURL
-        }
-    });
-});
+                content.push({
+                    type: "image_url",
+                    image_url: {
+                        url: image.dataURL
+                    }
+                });
+            });
 
-const apiMessages = [{
-    role: latestMessage.role,
-    content: content
-}];
-            // Call your Cloudflare Worker.
+            const apiMessages = [{
+                role: latestMessage.role,
+                content: content
+            }];
+
             const response = await fetch(API_URL, {
                 method: "POST",
 
@@ -1074,7 +1144,7 @@ const apiMessages = [{
                                   errorMessage;
                     }
                 } catch (error) {
-                    // Keep the default error message.
+                    // Use the default error message.
                 }
 
                 throw new Error(
@@ -1084,7 +1154,6 @@ const apiMessages = [{
 
             const data = await response.json();
 
-            // Read the AI response.
             let botText = "";
 
             if (
@@ -1092,12 +1161,14 @@ const apiMessages = [{
                 data.choices[0] &&
                 data.choices[0].message
             ) {
-                const content = data.choices[0].message.content;
+                const responseContent =
+                    data.choices[0].message.content;
 
-                if (typeof content === "string") {
-                    botText = content;
-                } else if (Array.isArray(content)) {
-                    botText = content
+                if (typeof responseContent === "string") {
+                    botText = responseContent;
+
+                } else if (Array.isArray(responseContent)) {
+                    botText = responseContent
                         .filter(function (item) {
                             return item.type === "text" && item.text;
                         })
@@ -1106,8 +1177,10 @@ const apiMessages = [{
                         })
                         .join("\n");
                 }
+
             } else if (typeof data.response === "string") {
                 botText = data.response;
+
             } else if (typeof data.reply === "string") {
                 botText = data.reply;
             }
@@ -1118,10 +1191,8 @@ const apiMessages = [{
                 );
             }
 
-            // Remove the loading message.
             loadingMessage.remove();
 
-            // Save the AI's answer.
             chat.messages.push({
                 role: "assistant",
                 text: botText,
@@ -1168,8 +1239,11 @@ const apiMessages = [{
         }
     });
 
-    // Allow Enter to send a message.
-    // Shift + Enter can be used for a new line if the input is a textarea.
+
+    // =========================================
+    // ENTER SENDS; SHIFT + ENTER ADDS A NEW LINE
+    // =========================================
+
     input.addEventListener("keydown", function (event) {
         if (
             event.key === "Enter" &&
@@ -1180,11 +1254,22 @@ const apiMessages = [{
 
             if (typeof form.requestSubmit === "function") {
                 form.requestSubmit();
+            } else {
+                form.dispatchEvent(
+                    new Event("submit", {
+                        bubbles: true,
+                        cancelable: true
+                    })
+                );
             }
         }
     });
 
-    // Keep the latest message visible.
+
+    // =========================================
+    // KEEP LATEST MESSAGE VISIBLE
+    // =========================================
+
     const messageObserver = new MutationObserver(function () {
         messages.scrollTop = messages.scrollHeight;
     });
