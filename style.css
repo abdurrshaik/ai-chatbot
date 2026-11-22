@@ -1756,3 +1756,136 @@ overflow: hidden;
         overflow-y: auto;
     }
 }
+
+/* =====================================
+   GEMINI VOICE CHAT SCREEN
+===================================== */
+
+.voice-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 24px;
+    background: #10172a;
+    color: #ffffff;
+    text-align: center;
+}
+
+.voice-overlay[hidden] {
+    display: none !important;
+}
+
+.voice-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border: 1px solid #374151;
+    border-radius: 50%;
+    background: #1f2937;
+    color: #ffffff;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.voice-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.voice-status {
+    min-height: 24px;
+    margin: 0;
+    color: #cbd5e1;
+    font-size: 15px;
+}
+
+.voice-orb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    height: 180px;
+    border: 1px solid #475569;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at 35% 30%,
+        #818cf8,
+        #4f46e5 55%,
+        #312e81
+    );
+    box-shadow: 0 0 60px rgba(99, 102, 241, 0.35);
+    font-size: 56px;
+}
+
+.voice-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.voice-controls button {
+    min-height: 48px;
+    padding: 12px 22px;
+    border: 1px solid #475569;
+    border-radius: 24px;
+    background: #1f2937;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.voice-controls button:hover {
+    background: #374151;
+}
+
+.voice-controls .voice-start {
+    border-color: #6366f1;
+    background: #4f46e5;
+}
+
+.voice-controls .voice-start:hover {
+    background: #4338ca;
+}
+
+.voice-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .voice-overlay {
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .voice-title {
+        font-size: 24px;
+    }
+
+    .voice-orb {
+        width: 145px;
+        height: 145px;
+        font-size: 46px;
+    }
+
+    .voice-controls {
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .voice-controls button {
+        flex: 1;
+        min-width: 120px;
+    }
+}
