@@ -1382,3 +1382,19 @@ body {
     }
 
 }
+
+@media screen and (max-width: 768px) {
+    .input-area {
+        position: fixed !important;
+        left: 0;
+        right: 0;
+        bottom: var(--keyboard-offset, 0px);
+        width: 100%;
+        z-index: 100;
+        box-sizing: border-box;
+    }
+
+    .main {
+        position: relative;
+    }
+}
