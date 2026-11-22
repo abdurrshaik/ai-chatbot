@@ -1969,3 +1969,27 @@ overflow: hidden;
     max-width: 100%;
     height: auto;
 }
+
+/* Mobile sidebar layout */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 85%;
+        max-width: 320px;
+        height: 100vh;
+        height: 100dvh;
+        box-sizing: border-box;
+        z-index: 1000;
+        overflow-y: auto;
+        flex: none;
+        transition: transform 0.3s ease;
+    }
+
+    .main {
+        width: 100%;
+        min-width: 0;
+        flex: 1;
+    }
+}
