@@ -615,74 +615,135 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================================
-    // MOBILE SIDEBAR
-    // =========================================
+// MOBILE SIDEBAR
+// =========================================
 
-    function closeSidebar() {
-        if (!sidebar || !app) return;
+const sidebarCloseBtn = document.getElementById("sidebarCloseBtn");
 
-        sidebar.classList.remove("sidebar-open");
-        app.classList.remove("sidebar-visible");
+function closeSidebar() {
+    if (!sidebar || !app) return;
 
-        if (sidebarToggle) {
-            sidebarToggle.setAttribute("aria-expanded", "false");
-        }
+    sidebar.classList.remove("sidebar-open");
+    app.classList.remove("sidebar-visible");
+
+    if (sidebarToggle) {
+        sidebarToggle.setAttribute("aria-expanded", "false");
     }
+}
 
-    function toggleSidebar() {
-        if (!sidebar || !app) return;
+function openSidebar() {
+    if (!sidebar || !app) return;
 
-        const isOpen = sidebar.classList.contains("sidebar-open");
-
-        if (isOpen) {
-            closeSidebar();
-        } else {
-            sidebar.classList.add("sidebar-open");
-            app.classList.add("sidebar-visible");
-
-            if (sidebarToggle) {
-                sidebarToggle.setAttribute("aria-expanded", "true");
-            }
-        }
-    }
-
-    if (sidebar && app) {
-        sidebar.classList.add("sidebar-open");
-        app.classList.add("sidebar-visible");
-    }
+    sidebar.classList.add("sidebar-open");
+    app.classList.add("sidebar-visible");
 
     if (sidebarToggle) {
         sidebarToggle.setAttribute("aria-expanded", "true");
-        sidebarToggle.addEventListener("click", toggleSidebar);
     }
+}
 
-    document.addEventListener("click", function (event) {
-        if (!sidebar || !sidebarToggle) return;
-        if (window.innerWidth > 768) return;
+function toggleSidebar() {
+    if (!sidebar || !app) return;
 
-        const isOpen = sidebar.classList.contains("sidebar-open");
+    const isOpen = app.classList.contains("sidebar-visible");
 
-        if (!isOpen) return;
+    if (isOpen) {
+        closeSidebar();
+    } else {
+        openSidebar();
+    }
+}
 
-        if (
-            !sidebar.contains(event.target) &&
-            !sidebarToggle.contains(event.target)
-        ) {
-            closeSidebar();
-        }
-    });
+// On mobile, start with the menu closed.
+// On desktop, keep the sidebar open.
+if (sidebar && app) {
+    if (window.innerWidth <= 768) {
+        closeSidebar();
+    } else {
+        openSidebar();
+    }
+}
 
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-            closeSidebar();
-        }
-    });
+if (sidebarToggle) {
+    sidebarToggle.addEventListener("click", toggleSidebar);
+}
 
-    window.addEventListener("resize", function () {
-        if (window.innerWidth > 768) {
-            closeSidebar();
-        }
-    });
+if (sidebarCloseBtn) {
+    sidebarCloseBtn.addEventListener("click", closeSidebar);
+}
+
+// Close the mobile menu when tapping outside it.
+document.addEventListener("click", function (event) {
+    if (!sidebar || !sidebarToggle) return;
+    if (window.innerWidth > 768) return;
+
+    const isOpen = app.classList.contains("sidebar-visible");
+
+    if (!isOpen) return;
+
+    if (
+        !sidebar.contains(event.target) &&
+        !sidebarToggle.contains(event.target)
+    ) {
+        closeSidebar();
+    }
+});
+
+// Close the menu with the Escape key.
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeSidebar();
+    }
+});
+
+// Keep the sidebar open on desktop and closed on mobile after resizing.
+window.addEventListener("resize", function () {
+    if (window.innerWidth > 768) {
+        openSidebar();
+    } else {
+        closeSidebar();
+    }
+});
+
+
+// =========================================
+// MOBILE KEYBOARD / INPUT POSITION
+// =========================================
+
+function updateKeyboardPosition() {
+    if (!app) return;
+
+    if (window.visualViewport && window.innerWidth <= 768) {
+        const viewport = window.visualViewport;
+        const keyboardHeight = Math.max(
+            0,
+            window.innerHeight - viewport.height - viewport.offsetTop
+        );
+
+        app.style.setProperty(
+            "--keyboard-height",
+            keyboardHeight + "px"
+        );
+    } else {
+        app.style.setProperty("--keyboard-height", "0px");
+    }
+}
+
+if (window.visualViewport) {
+    window.visualViewport.addEventListener(
+        "resize",
+        updateKeyboardPosition
+    );
+
+    window.visualViewport.addEventListener(
+        "scroll",
+        updateKeyboardPosition
+    );
+}
+
+window.addEventListener("resize", updateKeyboardPosition);
+
+updateKeyboardPosition();
 
 
     // =========================================
