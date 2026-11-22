@@ -1,631 +1,108 @@
+
+/* =========================================
+   GLOBAL
+========================================= */
+
 * {
-  box-sizing: border-box;
-  }
+    box-sizing: border-box;
+}
 
 html,
 body {
-width: 100%;
-height: 100%;
-margin: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
 }
 
 body {
-font-family: Arial, sans-serif;
-background: #f5f7fb;
-color: #202123;
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #202123;
 }
 
 .app {
-display: flex;
-width: 100%;
-height: 100vh;
-height: 100dvh;
-overflow: hidden;
-}
-
-/* Sidebar */
-.sidebar {
-flex: 0 0 270px;
-background: #202123;
-color: white;
-padding: 20px;
-}
-
-.logo {
-font-size: 23px;
-font-weight: bold;
-margin-bottom: 30px;
-}
-
-.new-chat {
-width: 100%;
-padding: 12px;
-border: 1px solid #565869;
-border-radius: 8px;
-background: transparent;
-color: white;
-cursor: pointer;
-font-size: 15px;
-}
-
-.new-chat:hover {
-background: #343541;
-}
-
-.sidebar p {
-margin-top: 20px;
-}
-
-/* Main chat area */
-.main {
-flex: 1;
-min-width: 0;
-display: flex;
-flex-direction: column;
-}
-
-.header {
-flex-shrink: 0;
-padding: 20px;
-background: white;
-border-bottom: 1px solid #e5e7eb;
-font-size: 18px;
-font-weight: bold;
-}
-
-/* Messages area */
-.messages {
-flex: 1;
-min-height: 0;
-display: flex;
-flex-direction: column;
-gap: 12px;
-overflow-y: auto;
-padding: 25px;
-}
-
-.welcome {
-text-align: center;
-margin: auto 0;
-}
-
-.welcome h1 {
-font-size: 32px;
-}
-
-.welcome p {
-color: #6b7280;
-}
-
-/* Individual messages */
-.message {
-display: block;
-width: fit-content;
-max-width: 80%;
-padding: 12px 16px;
-border-radius: 12px;
-line-height: 1.6;
-white-space: pre-wrap;
-overflow-wrap: anywhere;
-}
-
-.user-message {
-align-self: flex-end;
-background: #4f46e5;
-color: white;
-}
-
-.bot-message {
-align-self: flex-start;
-background: #e5e7eb;
-color: #111827;
-}
-
-/* AI answer formatting */
-.bot-message p {
-margin: 0 0 12px;
-}
-
-.bot-message p:last-child {
-margin-bottom: 0;
-}
-
-.bot-message h1,
-.bot-message h2,
-.bot-message h3,
-.bot-message h4 {
-margin: 18px 0 10px;
-line-height: 1.3;
-}
-
-.bot-message h1:first-child,
-.bot-message h2:first-child,
-.bot-message h3:first-child {
-margin-top: 0;
-}
-
-.bot-message ul,
-.bot-message ol {
-padding-left: 24px;
-margin: 8px 0 14px;
-}
-
-.bot-message li {
-margin: 4px 0;
-}
-
-/* Code blocks */
-.bot-message pre {
-max-width: 100%;
-overflow-x: auto;
-padding: 14px;
-border-radius: 8px;
-background: #111827;
-color: #f9fafb;
-white-space: pre;
-line-height: 1.5;
-}
-
-.bot-message pre code {
-font-family: Consolas, "Courier New", monospace;
-font-size: 14px;
-white-space: pre;
-overflow-wrap: normal;
-}
-
-.bot-message :not(pre) > code {
-padding: 2px 5px;
-border-radius: 4px;
-background: #d1d5db;
-font-family: Consolas, "Courier New", monospace;
-font-size: 0.9em;
-}
-
-.bot-message blockquote {
-margin: 12px 0;
-padding-left: 12px;
-border-left: 4px solid #9ca3af;
-color: #4b5563;
-}
-
-.bot-message table {
-display: block;
-max-width: 100%;
-overflow-x: auto;
-border-collapse: collapse;
-}
-
-.bot-message th,
-.bot-message td {
-border: 1px solid #9ca3af;
-padding: 8px;
-text-align: left;
-}
-
-/* Input area */
-.input-area {
-flex-shrink: 0;
-padding: 20px;
-background: #f5f7fb;
-}
-
-.chat-form {
-display: flex;
-align-items: flex-end;
-gap: 10px;
-width: 100%;
-max-width: 900px;
-margin: auto;
-}
-
-/* Multi-line input */
-.chat-input {
-flex: 1;
-min-width: 0;
-min-height: 48px;
-max-height: 180px;
-padding: 12px 16px;
-border: 1px solid #d1d5db;
-border-radius: 12px;
-outline: none;
-font-family: inherit;
-font-size: 16px;
-line-height: 1.5;
-resize: none;
-overflow-y: auto;
-white-space: pre-wrap;
-overflow-wrap: anywhere;
-box-sizing: border-box;
-}
-
-.chat-input:focus {
-border-color: #4f46e5;
-}
-
-.chat-input:disabled {
-opacity: 0.7;
-cursor: wait;
-}
-
-.send-button {
-min-height: 48px;
-padding: 0 22px;
-border: none;
-border-radius: 12px;
-background: #4f46e5;
-color: white;
-font-size: 16px;
-cursor: pointer;
-}
-
-.send-button:hover {
-background: #4338ca;
-}
-
-.send-button:disabled {
-opacity: 0.6;
-cursor: wait;
-}
-
-.disclaimer {
-max-width: 900px;
-margin: 15px auto 0;
-font-size: 14px;
-color: #6b7280;
-}
-
-/* Mobile layout */
-@media screen and (max-width: 600px) {
-.sidebar {
-flex: 0 0 85px;
-min-width: 85px;
-padding: 10px 6px;
-overflow: hidden;
-}
-
-.logo {
-    font-size: 13px;
-    line-height: 1.4;
-    text-align: center;
-    overflow-wrap: anywhere;
-    margin-bottom: 20px;
-}
-
-.sidebar p {
-    font-size: 11px;
-    text-align: center;
-    overflow-wrap: anywhere;
-}
-
-.new-chat {
-    font-size: 11px;
-    padding: 10px 3px;
-    overflow-wrap: anywhere;
-}
-
-.header {
-    padding: 16px 12px;
-    font-size: 16px;
-}
-
-.messages {
-    padding: 16px 10px;
-}
-
-  /* ===== GEMINI-STYLE MOBILE SIDEBAR ===== */
-
-@media (max-width: 600px) {
-    .app {
-        position: relative;
-        width: 100%;
-        height: 100vh;
-        height: 100dvh;
-        overflow: hidden;
-    }
-
-    /* Sidebar is hidden until the menu button is tapped */
-    .sidebar,
-    .app.sidebar-visible .sidebar {
-        position: fixed;
-        inset: 0;
-        z-index: 5000;
-        width: 100%;
-        height: 100vh;
-        height: 100dvh;
-        box-sizing: border-box;
-        overflow-y: auto;
-        padding: 20px 16px;
-        background: #202123;
-        flex: none;
-        transition: transform 0.25s ease;
-    }
-
-    .app:not(.sidebar-visible) .sidebar {
-        display: none;
-    }
-
-    /* Hide the chat while the menu is open */
-    .app.sidebar-visible .main {
-        display: none;
-    }
-
-    /* Show the chat when the menu is closed */
-    .app:not(.sidebar-visible) .main {
-        display: flex;
-        width: 100%;
-        min-width: 0;
-        height: 100%;
-    }
-
-    /* Keep the menu's contents readable */
-    .sidebar .logo {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 20px;
-    }
-
-    .sidebar .new-chat {
-        min-height: 52px;
-        border-radius: 14px;
-        font-size: 16px;
-    }
-
-    .chat-history-open {
-        font-size: 16px;
-    }
-}
-.welcome {
-    margin-top: 50px;
-}
-
-.welcome h1 {
-    font-size: 23px;
-}
-
-.welcome p {
-    font-size: 14px;
-}
-
-.message {
-    max-width: 95%;
-    font-size: 14px;
-    padding: 10px 12px;
-}
-
-.bot-message pre {
-    padding: 10px;
-}
-
-.bot-message pre code {
-    font-size: 12px;
-}
-
-.input-area {
-    padding: 10px;
-    padding-bottom: max(10px, env(safe-area-inset-bottom));
-}
-
-.chat-form {
-    gap: 6px;
-}
-
-.chat-input {
-    min-height: 46px;
-    padding: 12px 10px;
-    font-size: 16px;
-}
-
-.send-button {
-    min-height: 46px;
-    padding: 0 14px;
-    font-size: 14px;
-}
-
-.disclaimer {
-    font-size: 11px;
-    line-height: 1.4;
-}
-}
-
-/* =====================================
-   LOGIN AND SIGN-IN POPUP
-===================================== */
-
-.auth-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-}
-
-.auth-modal[hidden] {
-    display: none !important;
-}
-
-.auth-box {
-    position: relative;
     width: 100%;
-    max-width: 400px;
-    max-height: 90%;
-    overflow-y: auto;
-    padding: 30px 26px;
-    border: 1px solid #e5e7eb;
-    border-radius: 22px;
-    background: #ffffff;
-    color: #1f2937;
-    text-align: center;
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+    height: 100vh;
+    height: 100dvh;
+    min-width: 0;
+    overflow: hidden;
 }
 
-/* Smaller login popup logo */
-.auth-box .auth-logo {
-    display: block;
-    width: 58px;
-    height: 58px;
-    max-width: 58px;
-    max-height: 58px;
-    object-fit: contain;
-    margin: 0 auto 16px;
-    border-radius: 12px;
-}
+/* =========================================
+   SIDEBAR - DESKTOP
+========================================= */
 
-.auth-box h2 {
-    margin: 0 0 9px;
-    font-size: 25px;
-    font-weight: 700;
-    line-height: 1.3;
-    color: #111827;
-}
-
-.auth-box #authDescription {
-    margin: 0 0 22px;
-    font-size: 14px;
-    line-height: 1.6;
-    color: #6b7280;
-}
-
-/* Login form */
-.auth-box form {
+.sidebar {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    text-align: left;
+    flex: 0 0 290px;
+    width: 290px;
+    min-width: 0;
+    min-height: 0;
+    padding: 20px;
+    overflow-y: auto;
+    background: #202123;
+    color: white;
 }
 
-.auth-box label {
-    margin-top: 5px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #374151;
-}
-
-.auth-box input[type="email"],
-.auth-box input[type="password"] {
-    box-sizing: border-box;
-    width: 100%;
-    min-height: 46px;
-    padding: 12px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    outline: none;
-    background: #ffffff;
-    color: #111827;
-    font-size: 16px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.auth-box input[type="email"]:focus,
-.auth-box input[type="password"]:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.13);
-}
-
-/* Create Account button */
-.auth-box .auth-create-btn {
-    width: 100%;
-    min-height: 46px;
-    margin-top: 12px;
-    border: 1px solid #6366f1;
-    border-radius: 10px;
-    background: #ffffff;
-    color: #4f46e5;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.auth-box .auth-create-btn:hover {
-    background: #eef2ff;
-}
-
-/* Log In and Log Out buttons */
-.auth-box .auth-login-btn {
-    width: 100%;
-    min-height: 46px;
-    margin-top: 2px;
-    border: none;
-    border-radius: 10px;
-    background: #4f46e5;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.auth-box .auth-login-btn:hover {
-    background: #4338ca;
-}
-
-.auth-box button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* Popup close button */
-.auth-box .auth-close {
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    width: 36px;
-    height: 36px;
+.logo {
     display: flex;
     align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 50%;
-    background: #f3f4f6;
-    color: #4b5563;
-    font-size: 25px;
-    line-height: 1;
+    gap: 12px;
+    margin-bottom: 30px;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.sidebar img {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.sidebar button {
+    font-family: inherit;
     cursor: pointer;
 }
 
-.auth-box .auth-close:hover {
-    background: #e5e7eb;
+.new-chat,
+#newChatBtn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px;
+    border: 1px solid #565869;
+    border-radius: 12px;
+    background: transparent;
+    color: white;
+    font-size: 15px;
+    text-align: left;
+    cursor: pointer;
 }
 
-/* Login status message */
-.auth-box #authStatus {
-    margin: 14px 0 0;
-    font-size: 13px;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
+.new-chat:hover,
+#newChatBtn:hover {
+    background: #343541;
 }
 
-/* Mobile popup */
-@media (max-width: 480px) {
-    .auth-modal {
-        padding: 14px;
-    }
-
-    .auth-box {
-        max-width: 360px;
-        padding: 26px 20px;
-        border-radius: 18px;
-    }
-
-    .auth-box .auth-logo {
-        width: 50px;
-        height: 50px;
-        max-width: 50px;
-        max-height: 50px;
-    }
-
-    .auth-box h2 {
-        font-size: 22px;
-    }
+.sidebar p {
+    margin-top: 20px;
 }
 
-/* =====================================
+/* Sidebar close button */
+
+.sidebar-close {
+    display: none;
+}
+
+/* =========================================
    CHAT HISTORY
-===================================== */
+========================================= */
 
 .chat-history {
     display: flex;
@@ -634,6 +111,7 @@ overflow: hidden;
     width: 100%;
     min-width: 0;
     margin-top: 12px;
+    padding-bottom: 20px;
     overflow-x: hidden;
 }
 
@@ -644,7 +122,6 @@ overflow: hidden;
     width: 100%;
     min-width: 0;
     padding: 3px;
-    box-sizing: border-box;
     border-radius: 8px;
     background: transparent;
 }
@@ -656,15 +133,15 @@ overflow: hidden;
 
 .chat-history-open {
     flex: 1;
-    min-width: 0;
     width: 100%;
+    min-width: 0;
     padding: 10px;
     border: none;
     border-radius: 7px;
     background: transparent;
     color: #eeeeee;
     font-family: inherit;
-    font-size: 13px;
+    font-size: 14px;
     text-align: left;
     white-space: nowrap;
     overflow: hidden;
@@ -674,7 +151,7 @@ overflow: hidden;
 
 .chat-history-open:hover {
     background: #383940;
-    color: #ffffff;
+    color: white;
 }
 
 .chat-history-delete {
@@ -692,94 +169,102 @@ overflow: hidden;
 
 .chat-history-delete:hover {
     background: #45464e;
-    color: #ffffff;
+    color: white;
 }
 
-/* =====================================
-   SIDEBAR BUTTONS
-===================================== */
+/* =========================================
+   SIDEBAR LISTS AND FOCUS
+========================================= */
 
-.sidebar button {
-    font-family: inherit;
+.sidebar ul,
+.sidebar ol,
+.header ul,
+.header ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-.sidebar .new-chat {
-    display: block;
-    width: 100%;
-    min-height: 42px;
-    padding: 10px 12px;
-    border: 1px solid #565869;
-    border-radius: 8px;
-    background: transparent;
-    color: #ffffff;
-    font-size: 14px;
-    text-align: left;
-    cursor: pointer;
+.sidebar li,
+.header li {
+    list-style: none;
 }
 
-.sidebar .new-chat:hover {
-    background: #343541;
+.sidebar li::marker,
+.header li::marker {
+    content: "";
 }
 
-/* Keep history text readable */
 .chat-history-open:focus-visible,
 .chat-history-delete:focus-visible,
-.new-chat:focus-visible {
+.new-chat:focus-visible,
+#newChatBtn:focus-visible {
     outline: 2px solid #a5b4fc;
     outline-offset: 2px;
 }
 
-/* Prevent chat history from creating white boxes */
-.chat-history,
-.chat-history-item,
-.chat-history-open,
-.chat-history-delete {
-    box-shadow: none;
+/* =========================================
+   MAIN CHAT
+========================================= */
+
+.main {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    width: 0;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
 }
 
-/* =====================================
-   RESPONSIVE CHAT HISTORY
-===================================== */
-
-@media (max-width: 768px) {
-    .chat-history {
-        padding-bottom: 20px;
-    }
-
-    .chat-history-open {
-        font-size: 14px;
-    }
-}
-/* =====================================
-   HEADER AND AUTHENTICATION BUTTONS
-===================================== */
+/* =========================================
+   HEADER
+========================================= */
 
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    flex-shrink: 0;
     gap: 12px;
     min-width: 0;
     padding: 14px 20px;
     border-bottom: 1px solid #e5e7eb;
-    background: #ffffff;
+    background: white;
+}
+
+.header img,
+.header-logo {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
 }
 
 .header h1,
-.header h2 {
+.header h2,
+.header-title {
     min-width: 0;
     margin: 0;
     color: #202123;
     font-size: 18px;
     font-weight: 600;
+    text-align: left;
 }
 
-.header-actions {
+.sidebar-toggle {
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.header-actions,
+.header-auth {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 8px;
-    flex-wrap: wrap;
+    flex-shrink: 0;
+    margin-left: auto;
 }
 
 .header-actions button,
@@ -790,7 +275,7 @@ overflow: hidden;
     padding: 8px 14px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
-    background: #ffffff;
+    background: white;
     color: #202123;
     font-family: inherit;
     font-size: 13px;
@@ -812,68 +297,381 @@ overflow: hidden;
     background: #fef2f2;
 }
 
-/* =====================================
-   CHAT INPUT AREA
-===================================== */
+/* =========================================
+   MESSAGES
+========================================= */
 
-.chat-form {
+.messages {
+    position: relative;
     display: flex;
-    align-items: flex-end;
-    gap: 10px;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 12px;
     width: 100%;
     min-width: 0;
-    padding: 16px 20px;
-    border-top: 1px solid #e5e7eb;
-    background: #ffffff;
+    min-height: 0;
+    padding: 25px;
+    overflow-y: auto;
 }
 
+.welcome {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    padding: 24px;
+    text-align: center;
+}
+
+.welcome h1 {
+    margin: 0 0 12px;
+    color: #202123;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.welcome p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 16px;
+}
+
+.welcome[hidden] {
+    display: none !important;
+}
+
+/* =========================================
+   MESSAGE BUBBLES
+========================================= */
+
+.message {
+    display: block;
+    width: fit-content;
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+}
+
+.user-message {
+    align-self: flex-end;
+    background: #4f46e5;
+    color: white;
+}
+
+.bot-message {
+    align-self: flex-start;
+    background: #e5e7eb;
+    color: #111827;
+}
+
+#messages .message:empty {
+    display: none !important;
+}
+
+/* =========================================
+   MARKDOWN FORMATTING
+========================================= */
+
+.message-text {
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.message-text p {
+    margin: 0 0 12px;
+}
+
+.message-text p:last-child {
+    margin-bottom: 0;
+}
+
+.bot-message h1,
+.bot-message h2,
+.bot-message h3,
+.bot-message h4 {
+    margin: 18px 0 10px;
+    line-height: 1.3;
+}
+
+.bot-message h1:first-child,
+.bot-message h2:first-child,
+.bot-message h3:first-child {
+    margin-top: 0;
+}
+
+.bot-message ul,
+.bot-message ol {
+    margin: 8px 0 14px;
+    padding-left: 24px;
+}
+
+.bot-message li {
+    margin: 4px 0;
+}
+
+/* Code blocks */
+
+.message-text pre,
+.bot-message pre {
+    max-width: 100%;
+    padding: 14px;
+    overflow-x: auto;
+    border-radius: 10px;
+    background: #111827;
+    color: #f9fafb;
+    white-space: pre;
+    line-height: 1.5;
+}
+
+.message-text pre code,
+.bot-message pre code {
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    white-space: pre;
+    overflow-wrap: normal;
+}
+
+.message-text :not(pre) > code,
+.bot-message :not(pre) > code {
+    padding: 2px 5px;
+    border-radius: 4px;
+    background: #d1d5db;
+    color: #111827;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.9em;
+}
+
+.bot-message blockquote {
+    margin: 12px 0;
+    padding-left: 12px;
+    border-left: 4px solid #9ca3af;
+    color: #4b5563;
+}
+
+.bot-message table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+}
+
+.bot-message th,
+.bot-message td {
+    padding: 8px;
+    border: 1px solid #9ca3af;
+    text-align: left;
+}
+
+/* =========================================
+   CHAT IMAGES
+========================================= */
+
+.message-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.message-images img {
+    display: block;
+    flex: 0 1 auto;
+    width: auto;
+    height: auto;
+    max-width: min(320px, 100%);
+    max-height: 300px;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.attachment-preview-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* =========================================
+   INPUT AREA
+========================================= */
+
+.input-area {
+    position: relative;
+    flex-shrink: 0;
+    padding: 12px 20px;
+    background: #f5f7fb;
+}
+
+.chat-form,
+#chatForm {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    gap: 10px;
+    width: 100%;
+    max-width: 900px;
+    min-width: 0;
+    margin: auto;
+    padding: 16px 20px;
+    border-top: 1px solid #e5e7eb;
+    background: white;
+}
+
+/* Message input */
+
+.chat-input,
+#userInput,
 .chat-form textarea,
 .chat-form input[type="text"] {
-    flex: 1;
+    flex: 1 1 auto;
+    width: auto;
     min-width: 0;
-    min-height: 44px;
+    min-height: 48px;
     max-height: 180px;
     padding: 12px 14px;
     border: 1px solid #d1d5db;
     border-radius: 12px;
     outline: none;
-    background: #ffffff;
+    background: white;
     color: #202123;
     font-family: inherit;
     font-size: 16px;
+    line-height: 1.5;
+    resize: none;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 
+.chat-input:focus,
+#userInput:focus,
 .chat-form textarea:focus,
 .chat-form input[type="text"]:focus {
     border-color: #6366f1;
     box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.12);
 }
 
-.chat-form button {
-    flex-shrink: 0;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 10px 16px;
+.chat-input:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* Attach button */
+
+.attachment-wrapper {
+    position: relative;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+}
+
+#attachBtn,
+.attach-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Send button */
+
+.send-button,
+#chatForm button[type="submit"] {
+    flex: 0 0 auto;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0 18px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #4f46e5;
-    color: #ffffff;
-    font-size: 14px;
+    color: white;
+    font-size: 16px;
     cursor: pointer;
 }
 
-.chat-form button:hover {
+.send-button:hover,
+#chatForm button[type="submit"]:hover {
     background: #4338ca;
 }
 
-.chat-form button:disabled {
+.send-button:disabled,
+#chatForm button[type="submit"]:disabled {
     opacity: 0.6;
-    cursor: not-allowed;
+    cursor: wait;
 }
 
-/* =====================================
+/* Disclaimer */
+
+.disclaimer {
+    max-width: 900px;
+    margin: 12px auto 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* =========================================
+   ATTACHMENT MENU
+========================================= */
+
+.attachment-menu[hidden] {
+    display: none !important;
+}
+
+.attachment-menu:not([hidden]),
+#attachmentMenu:not([hidden]) {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 10px);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 150px;
+    max-width: calc(100vw - 30px);
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.attachment-menu button,
+#attachmentMenu button {
+    width: 100%;
+    min-height: 42px;
+    margin: 0;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #4f46e5;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+.attachment-menu button:hover,
+#attachmentMenu button:hover {
+    background: #4338ca;
+}
+
+/* =========================================
    ATTACHMENT PREVIEW
-===================================== */
+========================================= */
 
 .attachment-preview {
     display: flex;
@@ -918,22 +716,389 @@ overflow: hidden;
     cursor: pointer;
 }
 
-/* =====================================
-   MOBILE HEADER AND INPUT
-===================================== */
+/* =========================================
+   LOGIN AND SIGN-IN POPUP
+========================================= */
 
-@media (max-width: 600px) {
+.auth-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.auth-modal[hidden] {
+    display: none !important;
+}
+
+.auth-box {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    max-height: 90%;
+    padding: 30px 26px;
+    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    background: white;
+    color: #1f2937;
+    text-align: center;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+}
+
+.auth-box .auth-logo,
+.auth-box img,
+.auth-logo {
+    display: block;
+    width: 58px;
+    height: 58px;
+    max-width: 58px;
+    max-height: 58px;
+    margin: 0 auto 16px;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
+.auth-box h2 {
+    margin: 0 0 9px;
+    color: #111827;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.auth-box #authDescription {
+    margin: 0 0 22px;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.auth-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+}
+
+.auth-box label {
+    margin-top: 5px;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.auth-box input {
+    width: 100%;
+    min-width: 0;
+    font-size: 16px;
+}
+
+.auth-box input[type="email"],
+.auth-box input[type="password"] {
+    min-height: 46px;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    outline: none;
+    background: white;
+    color: #111827;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auth-box input[type="email"]:focus,
+.auth-box input[type="password"]:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.13);
+}
+
+.auth-box button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.auth-box .auth-create-btn {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 12px;
+    border: 1px solid #6366f1;
+    border-radius: 10px;
+    background: white;
+    color: #4f46e5;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.auth-box .auth-create-btn:hover {
+    background: #eef2ff;
+}
+
+.auth-box .auth-login-btn {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 2px;
+    border: none;
+    border-radius: 10px;
+    background: #4f46e5;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.auth-box .auth-login-btn:hover {
+    background: #4338ca;
+}
+
+.auth-box button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.auth-box .auth-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: #4b5563;
+    font-size: 25px;
+    line-height: 1;
+}
+
+.auth-box .auth-close:hover {
+    background: #e5e7eb;
+}
+
+.auth-box #authStatus {
+    margin: 14px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   DESKTOP SIDEBAR OPEN / CLOSE
+========================================= */
+
+@media (min-width: 769px) {
+    .app:not(.sidebar-visible) .sidebar {
+        flex-basis: 0;
+        width: 0;
+        padding-left: 0;
+        padding-right: 0;
+        overflow: hidden;
+        visibility: hidden;
+    }
+
+    .app.sidebar-visible .sidebar {
+        flex-basis: 290px;
+        width: 290px;
+        visibility: visible;
+    }
+}
+
+/* =========================================
+   MOBILE FULL-SCREEN SIDEBAR
+========================================= */
+
+@media screen and (max-width: 768px) {
+
+    .app {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    /* Hide sidebar when closed */
+
+    .app:not(.sidebar-visible) .sidebar {
+        display: none !important;
+    }
+
+    /* Full-screen sidebar when open */
+
+    .app.sidebar-visible .sidebar {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+
+        display: flex;
+        flex-direction: column;
+
+        width: 100%;
+        max-width: none;
+        height: 100vh;
+        height: 100dvh;
+
+        flex: none;
+        min-width: 0;
+        min-height: 0;
+
+        padding: 20px 16px;
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        background: #000000;
+        color: #ffffff;
+        visibility: visible;
+    }
+
+    /* Hide chat while sidebar is open */
+
+    .app.sidebar-visible .main {
+        display: none !important;
+    }
+
+    /* Show chat when sidebar is closed */
+
+    .app:not(.sidebar-visible) .main {
+        display: flex;
+        flex: 1 1 100%;
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+    }
+
+    /* Close button */
+
+    .sidebar-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: flex-end;
+
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+
+        margin: 0 0 12px auto;
+        padding: 0;
+
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: #ffffff;
+        font-size: 32px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .sidebar-close:hover {
+        background: #252525;
+    }
+
+    /* Sidebar logo */
+
+    .sidebar .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+        font-size: 22px;
+        text-align: left;
+    }
+
+    .sidebar .logo img {
+        width: 36px;
+        height: 36px;
+    }
+
+    /* New Chat - Gemini-style pill */
+
+    .sidebar .new-chat,
+    .sidebar #newChatBtn {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        min-height: 56px;
+        margin: 0 0 14px;
+        padding: 14px 20px;
+
+        border: none;
+        border-radius: 32px;
+        background: #171717;
+        color: #eeeeee;
+        font-size: 17px;
+        text-align: left;
+    }
+
+    .sidebar .new-chat:hover,
+    .sidebar #newChatBtn:hover {
+        background: #292929;
+    }
+
+    /* Sidebar descriptions */
+
+    .sidebar p {
+        margin: 14px 0;
+        color: #aaaaaa;
+        font-size: 15px;
+    }
+
+    /* Chat history */
+
+    .sidebar .chat-history {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 12px;
+        padding-bottom: 20px;
+        overflow-x: hidden;
+    }
+
+    .sidebar .chat-history-item {
+        width: 100%;
+        min-width: 0;
+        padding: 2px;
+    }
+
+    .sidebar .chat-history-open {
+        min-width: 0;
+        padding: 12px 8px;
+        color: #eeeeee;
+        font-size: 16px;
+    }
+
+    .sidebar .chat-history-delete {
+        flex-shrink: 0;
+        color: #aaaaaa;
+    }
+
+    /* Mobile chat header */
+
     .header {
         gap: 8px;
         padding: 12px;
     }
 
     .header h1,
-    .header h2 {
+    .header h2,
+    .header-title {
         font-size: 16px;
     }
 
-    .header-actions {
+    .header-actions,
+    .header-auth {
         gap: 5px;
     }
 
@@ -946,653 +1111,18 @@ overflow: hidden;
         font-size: 12px;
     }
 
-    .chat-form {
-        gap: 7px;
-        padding: 12px;
+    /* Messages */
+
+    .messages {
+        min-height: 0;
+        padding: 16px 10px;
     }
 
-    .chat-form button {
-        padding: 10px 12px;
+    .welcome {
+        margin: auto;
+        padding: 16px;
     }
 
-    .attachment-preview {
-        padding: 8px 12px;
-    }
-}
-/* =====================================
-   REMOVE UNWANTED LIST MARKERS
-===================================== */
-
-.sidebar ul,
-.sidebar ol,
-.header ul,
-.header ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.sidebar li,
-.header li {
-    list-style: none;
-}
-
-.sidebar li::marker,
-.header li::marker {
-    content: "";
-}
-
-/* =====================================
-   SIDEBAR BUTTONS
-===================================== */
-
-.sidebar button {
-    font-family: inherit;
-    cursor: pointer;
-}
-
-#newChatBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    min-height: 42px;
-    padding: 10px 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    background: #ffffff;
-    color: #202123;
-    font-size: 14px;
-}
-
-#newChatBtn:hover {
-    background: #f3f4f6;
-}
-
-/* =====================================
-   SIDEBAR OPEN / CLOSE STATES
-===================================== */
-
-.sidebar {
-    flex-shrink: 0;
-    min-width: 0;
-}
-
-.app {
-    min-width: 0;
-}
-
-.main {
-    flex: 1;
-    min-width: 0;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.messages {
-    flex: 1;
-    min-width: 0;
-    min-height: 0;
-    overflow-y: auto;
-}
-
-/* =====================================
-   CHAT MESSAGE SAFETY
-   Keep messages visible
-===================================== */
-
-.message {
-    display: block;
-    width: fit-content;
-    max-width: 85%;
-    overflow-wrap: anywhere;
-    white-space: pre-wrap;
-}
-
-.user-message {
-    align-self: flex-end;
-}
-
-.bot-message {
-    align-self: flex-start;
-}
-
-/* =====================================
-   LOGO SIZING
-===================================== */
-
-.sidebar img,
-.header img {
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-    max-width: 100%;
-    object-fit: contain;
-}
-
-.auth-box img,
-.auth-logo {
-    display: block;
-    width: 58px;
-    height: 58px;
-    max-width: 100%;
-    margin: 0 auto 12px;
-    object-fit: contain;
-}
-
-/* =====================================
-   AUTH MODAL BUTTONS
-===================================== */
-
-.auth-box button {
-    font-family: inherit;
-    cursor: pointer;
-}
-
-.auth-box input {
-    width: 100%;
-    min-width: 0;
-    font-size: 16px;
-}
-
-/* =====================================
-   RESPONSIVE LAYOUT
-===================================== */
-
-@media (max-width: 600px) {
-    .message {
-        max-width: 92%;
-    }
-
-    .sidebar img,
-    .header img {
-        width: 28px;
-        height: 28px;
-    }
-
-    .auth-box img,
-    .auth-logo {
-        width: 48px;
-        height: 48px;
-    }
-}
-/* ===== FIX CHAT INPUT ALIGNMENT ===== */
-
-.chat-form {
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 10px;
-}
-
-#attachBtn {
-    position: relative;
-    flex: 0 0 48px;
-    width: 48px;
-    height: 48px;
-    margin: 0;
-    padding: 0;
-}
-
-/* Keep the message input on the same line */
-#userInput {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-/* Keep the Send button on the same line */
-#chatForm button[type="submit"] {
-    flex: 0 0 auto;
-}
-
-/* ===== ATTACHMENT MENU ===== */
-
-#attachmentMenu {
-    position: absolute;
-    left: 20px;
-    bottom: calc(100% + 8px);
-    z-index: 1000;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    max-width: calc(100% - 40px);
-    padding: 10px;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    background: #ffffff;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-
-/* ===== HIDE EMPTY MESSAGE BUBBLES ===== */
-
-#messages .message:empty {
-    display: none !important;
-}
-
-/* ===== MOBILE LAYOUT ===== */
-
-@media (max-width: 600px) {
-    .chat-form {
-        gap: 6px;
-        padding: 10px;
-    }
-
-    #attachBtn {
-        flex-basis: 42px;
-        width: 42px;
-        height: 42px;
-    }
-
-    #attachmentMenu {
-        left: 10px;
-        max-width: calc(100% - 20px);
-    }
-}
-
-/* Sidebar toggle behavior */
-
-.app {
-    display: flex;
-    min-width: 0;
-}
-
-.sidebar {
-    flex: 0 0 290px;
-    width: 290px;
-    min-width: 0;
-    transition: width 0.25s ease, flex-basis 0.25s ease;
-}
-
-.main {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-/* Desktop: hide the sidebar when closed */
-.app:not(.sidebar-visible) .sidebar {
-    flex-basis: 0;
-    width: 0;
-    overflow: hidden;
-}
-
-/* Keep the sidebar visible when open */
-.app.sidebar-visible .sidebar {
-    flex-basis: 290px;
-    width: 290px;
-}
-
-/* Toggle button */
-#sidebarToggle {
-    cursor: pointer;
-}
-
-@media (max-width: 600px) {
-    .sidebar {
-        flex-basis: 0;
-        width: 0;
-    }
-
-    .app.sidebar-visible .sidebar {
-        flex-basis: 250px;
-        width: 250px;
-    }
-}
-/* ===== COMPLETELY COLLAPSE SIDEBAR ===== */
-
-.app {
-    min-width: 0;
-    overflow: hidden;
-}
-
-.sidebar {
-    box-sizing: border-box;
-    flex-shrink: 0;
-    min-width: 0;
-    overflow: hidden;
-    transition: width 0.25s ease, flex-basis 0.25s ease,
-                padding 0.25s ease;
-}
-
-/* Sidebar closed */
-.app:not(.sidebar-visible) .sidebar {
-    width: 0 !important;
-    min-width: 0 !important;
-    flex-basis: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    border-left: 0 !important;
-    border-right: 0 !important;
-    visibility: hidden;
-}
-
-/* Sidebar open */
-.app.sidebar-visible .sidebar {
-    width: 290px !important;
-    flex-basis: 290px !important;
-    visibility: visible;
-}
-
-/* Keep main content from shrinking incorrectly */
-.main {
-    flex: 1 1 0;
-    min-width: 0;
-    overflow: hidden;
-}
-
-@media (max-width: 600px) {
-    .app.sidebar-visible .sidebar {
-        width: 250px !important;
-        flex-basis: 250px !important;
-    }
-}
-/* ===== ATTACHMENT MENU ===== */
-
-#attachmentMenu {
-    position: absolute;
-    left: 0;
-    bottom: calc(100% + 8px);
-    z-index: 1000;
-
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-
-    width: 150px;
-    max-width: calc(100vw - 30px);
-    padding: 10px;
-
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-
-/* Stack the three attachment buttons vertically */
-#attachmentMenu button,
-#cameraOption,
-#photosOption,
-#filesOption {
-    width: 100%;
-    min-height: 42px;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-/* Keep the plus button beside the input */
-#attachBtn {
-    position: relative;
-    flex: 0 0 48px;
-    width: 48px;
-    height: 48px;
-    margin: 0;
-}
-
-/* Keep the input and Send button on one line */
-#chatForm {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 10px;
-}
-
-#userInput {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-#chatForm button[type="submit"] {
-    flex: 0 0 auto;
-}/* ===== ATTACHMENT MENU ===== */
-
-/* ==================================
-   AI CHATBOT ATTACHMENT MENU FIX
-================================== */
-
-.attachment-wrapper {
-    position: relative;
-    flex: 0 0 48px;
-    width: 48px;
-    height: 48px;
-}
-
-/* Plus button */
-.attach-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    margin: 0;
-    padding: 0;
-    flex-shrink: 0;
-}
-
-/* Attachment menu: hidden until + is clicked */
-.attachment-menu[hidden] {
-    display: none !important;
-}
-
-/* Vertical attachment menu */
-.attachment-menu:not([hidden]) {
-    position: absolute;
-    left: 0;
-    bottom: calc(100% + 10px);
-    z-index: 1000;
-
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-
-    width: 150px;
-    padding: 10px;
-    box-sizing: border-box;
-
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-
-/* Camera, Photos, and Files */
-.attachment-menu button {
-    display: block;
-    width: 100%;
-    min-height: 42px;
-    margin: 0;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background: #4f46e5;
-    color: #ffffff;
-    text-align: left;
-    cursor: pointer;
-}
-
-.attachment-menu button:hover {
-    background: #4338ca;
-}
-
-/* Keep +, input, and Send aligned */
-.chat-form {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 10px;
-    min-width: 0;
-}
-
-.chat-input {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.send-button {
-    flex: 0 0 auto;
-}
-
-@media (max-width: 600px) {
-    .attachment-wrapper {
-        flex-basis: 42px;
-        width: 42px;
-        height: 42px;
-    }
-
-    .attach-button {
-        width: 42px;
-        height: 42px;
-    }
-}
-/* ===== HEADER ALIGNMENT ===== */
-
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    min-width: 0;
-}
-
-.header img {
-    width: 36px;
-    height: 36px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
-
-.header h1,
-.header h2 {
-    margin: 0;
-    text-align: left;
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-}
-/* ==================================
-   HEADER ALIGNMENT
-================================== */
-
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    min-width: 0;
-}
-
-.header-logo {
-    width: 36px;
-    height: 36px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
-
-.header-title {
-    margin: 0;
-    text-align: center;
-}
-
-.header-auth {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    flex-shrink: 0;
-}
-/* ===== FIX HEADER ALIGNMENT ===== */
-
-.header {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 12px;
-    padding: 12px 20px;
-    min-width: 0;
-}
-
-/* Menu button stays on the left */
-.sidebar-toggle {
-    flex: 0 0 auto;
-    margin-right: 0;
-}
-
-/* Logo stays beside the menu button */
-.header-logo {
-    display: block;
-    flex: 0 0 36px;
-    width: 36px;
-    height: 36px;
-    object-fit: contain;
-    margin: 0;
-}
-
-/* Title stays beside the logo */
-.header-title {
-    flex: 0 1 auto;
-    margin: 0;
-    text-align: left;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-/* Account buttons stay on the right */
-.header-auth {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: auto;
-    flex-shrink: 0;
-}
-/* ===== CENTER WELCOME MESSAGE ===== */
-
-.messages {
-    position: relative;
-    flex: 1 1 auto;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-}
-
-/* Center welcome content when visible */
-.welcome {
-    width: 100%;
-    max-width: 700px;
-    margin: auto;
-    padding: 24px;
-    text-align: center;
-    box-sizing: border-box;
-}
-
-.welcome h1 {
-    margin: 0 0 12px;
-    font-size: 30px;
-    font-weight: 700;
-    color: #202123;
-}
-
-.welcome p {
-    margin: 0;
-    font-size: 16px;
-    color: #6b7280;
-}
-
-/* Keep the welcome message hidden only when explicitly hidden */
-.welcome[hidden] {
-    display: none !important;
-}
-
-@media (max-width: 600px) {
     .welcome h1 {
         font-size: 24px;
     }
@@ -1600,451 +1130,108 @@ overflow: hidden;
     .welcome p {
         font-size: 14px;
     }
-}
 
-/* Keep images inside chat messages from taking over the screen */
-.message-images {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    max-width: 100%;
-}
+    .message {
+        max-width: 92%;
+        padding: 10px 12px;
+        font-size: 14px;
+    }
 
-.message-images img {
-    display: block;
-    width: auto;
-    max-width: min(320px, 100%);
-    max-height: 300px;
-    object-fit: contain;
-    border-radius: 10px;
-}
+    .message-text pre,
+    .bot-message pre {
+        padding: 10px;
+    }
 
-/* Keep selected-image previews small */
-.attachment-preview-item img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-}
+    .message-text pre code,
+    .bot-message pre code {
+        font-size: 12px;
+    }
 
-/* Keep attached images inside the chat message */
-#messages .message-images {
-    display: flex !important;
-    flex-wrap: wrap;
-    gap: 8px;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    overflow: hidden;
-}
+    /* Input */
 
-#messages .message-images img {
-    display: block !important;
-    width: auto !important;
-    height: auto !important;
-    max-width: 320px !important;
-    max-height: 300px !important;
-    object-fit: contain;
-    flex: 0 1 auto;
-}
+    .input-area {
+        padding: 8px 10px;
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
 
-/* Keep the chat message itself from expanding */
-#messages .message {
-    min-width: 0;
-    max-width: 100%;
-    box-sizing: border-box;
+    .chat-form,
+    #chatForm {
+        gap: 6px;
+        padding: 8px 0;
+    }
+
+    .attachment-wrapper {
+        flex-basis: 42px;
+        width: 42px;
+        height: 42px;
+    }
+
+    #attachBtn,
+    .attach-button {
+        flex-basis: 42px;
+        width: 42px;
+        height: 42px;
+    }
+
+    .chat-input,
+    #userInput,
+    .chat-form textarea,
+    .chat-form input[type="text"] {
+        min-height: 46px;
+        max-height: 30vh;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .send-button,
+    #chatForm button[type="submit"] {
+        min-height: 46px;
+        padding: 0 12px;
+        font-size: 14px;
+    }
+
+    .attachment-preview {
+        padding: 8px 10px;
+    }
+
+    .disclaimer {
+        margin-top: 8px;
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    .attachment-menu:not([hidden]),
+    #attachmentMenu:not([hidden]) {
+        left: 0;
+        max-width: calc(100vw - 30px);
+    }
 }
 
 /* =========================================
-   MOBILE FULL-SCREEN SIDEBAR
+   SMALL LOGIN POPUP
 ========================================= */
 
-.sidebar-close {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .app {
-        position: relative;
-        width: 100%;
-        height: 100vh;
-        height: 100dvh;
-        overflow: hidden;
+@media (max-width: 480px) {
+    .auth-modal {
+        padding: 14px;
     }
 
-    .app:not(.sidebar-visible) .sidebar {
-        display: none;
+    .auth-box {
+        max-width: 360px;
+        padding: 26px 20px;
+        border-radius: 18px;
     }
 
-    .app.sidebar-visible .sidebar {
-        display: flex;
-        position: fixed;
-        inset: 0;
-        z-index: 10000;
-        box-sizing: border-box;
-        width: 100%;
-        height: 100vh;
-        height: 100dvh;
-        overflow-y: auto;
-        flex: none;
-        padding: 20px 16px;
-        background: #202123;
-        color: #ffffff;
+    .auth-box .auth-logo,
+    .auth-box img,
+    .auth-logo {
+        width: 50px;
+        height: 50px;
+        max-width: 50px;
+        max-height: 50px;
     }
 
-    .app.sidebar-visible .main {
-        display: none;
+    .auth-box h2 {
+        font-size: 22px;
     }
-
-    .app:not(.sidebar-visible) .main {
-        display: flex;
-        width: 100%;
-        min-width: 0;
-        height: 100%;
-    }
-
-    .sidebar-close {
-        display: block;
-        align-self: flex-end;
-        width: 42px;
-        height: 42px;
-        margin: 0 0 12px auto;
-        border: none;
-        border-radius: 50%;
-        background: transparent;
-        color: #ffffff;
-        font-size: 32px;
-        line-height: 1;
-        cursor: pointer;
-    }
-
-    .sidebar .logo {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .sidebar .new-chat {
-        width: 100%;
-        min-height: 52px;
-        margin-top: 24px;
-        border-radius: 14px;
-    }
-
-    .sidebar .chat-history {
-        width: 100%;
-        min-width: 0;
-    }
-
-    /* Keep the composer above the mobile keyboard */
-    .app:not(.sidebar-visible) .input-area {
-        bottom: var(--keyboard-height, 0px);
-    }
-
-    .app:not(.sidebar-visible) .main {
-        height: calc(100% - var(--keyboard-height, 0px));
-    }
-
-    .app:not(.sidebar-visible) .messages {
-        min-height: 0;
-        overflow-y: auto;
-    }
-
-    .app:not(.sidebar-visible) .chat-input {
-        min-width: 0;
-        max-height: 30vh;
-        overflow-y: auto;
-    }
-}
-
-/* =====================================
-   GEMINI VOICE CHAT SCREEN
-===================================== */
-
-.voice-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 20000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-    padding: 24px;
-    background: #10172a;
-    color: #ffffff;
-    text-align: center;
-}
-
-.voice-overlay[hidden] {
-    display: none !important;
-}
-
-.voice-close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 44px;
-    height: 44px;
-    border: 1px solid #374151;
-    border-radius: 50%;
-    background: #1f2937;
-    color: #ffffff;
-    font-size: 26px;
-    cursor: pointer;
-}
-
-.voice-title {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 600;
-}
-
-.voice-status {
-    min-height: 24px;
-    margin: 0;
-    color: #cbd5e1;
-    font-size: 15px;
-}
-
-.voice-orb {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 180px;
-    height: 180px;
-    border: 1px solid #475569;
-    border-radius: 50%;
-    background: radial-gradient(
-        circle at 35% 30%,
-        #818cf8,
-        #4f46e5 55%,
-        #312e81
-    );
-    box-shadow: 0 0 60px rgba(99, 102, 241, 0.35);
-    font-size: 56px;
-}
-
-.voice-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.voice-controls button {
-    min-height: 48px;
-    padding: 12px 22px;
-    border: 1px solid #475569;
-    border-radius: 24px;
-    background: #1f2937;
-    color: #ffffff;
-    font-family: inherit;
-    font-size: 15px;
-    cursor: pointer;
-}
-
-.voice-controls button:hover {
-    background: #374151;
-}
-
-.voice-controls .voice-start {
-    border-color: #6366f1;
-    background: #4f46e5;
-}
-
-.voice-controls .voice-start:hover {
-    background: #4338ca;
-}
-
-.voice-controls button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-@media (max-width: 600px) {
-    .voice-overlay {
-        gap: 20px;
-        padding: 20px;
-    }
-
-    .voice-title {
-        font-size: 24px;
-    }
-
-    .voice-orb {
-        width: 145px;
-        height: 145px;
-        font-size: 46px;
-    }
-
-    .voice-controls {
-        width: 100%;
-        max-width: 320px;
-    }
-
-    .voice-controls button {
-        flex: 1;
-        min-width: 120px;
-    }
-}
-
-/* Mobile chat composer layout */
-@media (max-width: 600px) {
-    #chatForm {
-        display: grid;
-        grid-template-columns: 52px minmax(0, 1fr) 70px;
-        gap: 8px;
-        align-items: end;
-    }
-
-    #openVoiceBtn {
-        grid-column: 1 / -1;
-        width: 100%;
-        min-height: 44px;
-    }
-
-    #chatForm textarea,
-    #chatForm input {
-        width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
-    }
-
-    #chatForm textarea {
-        grid-column: 2;
-        grid-row: 2;
-        min-height: 52px;
-        max-height: 140px;
-        resize: vertical;
-    }
-
-    #chatForm button[type="submit"] {
-        grid-column: 3;
-        grid-row: 2;
-        min-width: 0;
-        width: 100%;
-    }
-}
-
-/* Formatted chatbot replies */
-.message-text {
-    overflow-wrap: anywhere;
-    line-height: 1.6;
-}
-
-.message-text p {
-    margin: 0 0 12px;
-}
-
-.message-text pre {
-    max-width: 100%;
-    overflow-x: auto;
-    padding: 14px;
-    border-radius: 10px;
-    background: #1e1e1e;
-    color: #f5f5f5;
-    white-space: pre;
-}
-
-.message-text code {
-    font-family: Consolas, "Courier New", monospace;
-}
-
-.message-text :not(pre) > code {
-    padding: 2px 5px;
-    border-radius: 4px;
-    background: #e5e7eb;
-    color: #111827;
-}
-
-.message-text pre code {
-    background: transparent;
-    color: inherit;
-    padding: 0;
-}
-
-.message-text img {
-    max-width: 100%;
-    height: auto;
-}
-
-/* Mobile sidebar layout */
-@media screen and (max-width: 768px) {
-    .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 85%;
-        max-width: 320px;
-        height: 100vh;
-        height: 100dvh;
-        box-sizing: border-box;
-        z-index: 1000;
-        overflow-y: auto;
-        flex: none;
-        transition: transform 0.3s ease;
-    }
-
-    .main {
-        width: 100%;
-        min-width: 0;
-        flex: 1;
-    }
-}
-
-/* =====================================
-   MOBILE SIDEBAR DRAWER
-===================================== */
-
-@media screen and (max-width: 768px) {
-
-    .app {
-        position: relative;
-        width: 100%;
-        height: 100vh;
-        height: 100dvh;
-        overflow: hidden;
-    }
-
-    .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-
-        width: 85%;
-        max-width: 320px;
-        height: 100vh;
-        height: 100dvh;
-
-        box-sizing: border-box;
-        overflow-y: auto;
-
-        z-index: 1000;
-
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-
-        flex: none;
-    }
-
-    .sidebar.sidebar-open {
-        transform: translateX(0);
-    }
-
-    .main {
-        width: 100%;
-        min-width: 0;
-        height: 100%;
-        flex: 1;
-    }
-
-    /* Hide chat while menu is open */
-    .app.sidebar-visible .main {
-        visibility: hidden;
-        pointer-events: none;
-    }
-
 }
