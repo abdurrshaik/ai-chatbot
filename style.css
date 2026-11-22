@@ -1927,3 +1927,45 @@ overflow: hidden;
         width: 100%;
     }
 }
+
+/* Formatted chatbot replies */
+.message-text {
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+}
+
+.message-text p {
+    margin: 0 0 12px;
+}
+
+.message-text pre {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 14px;
+    border-radius: 10px;
+    background: #1e1e1e;
+    color: #f5f5f5;
+    white-space: pre;
+}
+
+.message-text code {
+    font-family: Consolas, "Courier New", monospace;
+}
+
+.message-text :not(pre) > code {
+    padding: 2px 5px;
+    border-radius: 4px;
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.message-text pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+.message-text img {
+    max-width: 100%;
+    height: auto;
+}
