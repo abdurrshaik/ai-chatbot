@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
         openLoginBtn.addEventListener("click", function () {
             openAuthPopup(
                 "Welcome Back",
-                "Log in to your AI Chatbot account."
+                "Log in to your AI Astra account."
             );
         });
     }
@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (authDescription) {
                 authDescription.textContent =
-                    "You are signed in to AI Chatbot.";
+                    "You are signed in to AI Astra.";
             }
 
         } else {
@@ -949,7 +949,7 @@ updateKeyboardPosition();
             welcome.className = "welcome";
 
             const heading = document.createElement("h1");
-            heading.textContent = "Welcome to AI Chatbot";
+            heading.textContent = "Welcome to AI Astra";
 
             const paragraph = document.createElement("p");
             paragraph.textContent = "Ask a question to get started.";
@@ -1359,7 +1359,7 @@ updateKeyboardPosition();
         childList: true
     });
 
-    console.log("AI Chatbot script loaded successfully.");
+    console.log("AI Astra script loaded successfully.");
 });
 
 // =====================================
