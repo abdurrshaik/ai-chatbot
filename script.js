@@ -117,18 +117,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (authPassword) authPassword.value = "";
 
             } catch (error) {
-                console.error("Firebase sign-up error:", error);
+    console.error("Image reading error:", error);
+    console.error("Selected file:", file);
 
-                if (authStatus) {
-                    authStatus.textContent =
-                        getAuthErrorMessage(error.code);
-                }
-
-            } finally {
-                signUpBtn.disabled = false;
-            }
-        });
-    }
+    setAttachmentStatus(
+        "Could not read image: " + (error.message || "Unknown error"),
+        true
+    );
+}
 
     // Log in when the popup form is submitted
     if (authForm) {
