@@ -618,10 +618,22 @@ document.addEventListener("DOMContentLoaded", function () {
 // MOBILE SIDEBAR
 // =========================================
 
-const sidebarCloseBtn = document.getElementById("sidebarCloseBtn");
+
+// =========================================
+// MOBILE SIDEBAR
+// =========================================
+
+// Track whether the mobile menu has its own browser history entry.
+let sidebarHistoryOpen = false;
 
 function closeSidebar() {
     if (!sidebar || !app) return;
+
+    // On mobile, use browser history to handle closing.
+    if (window.innerWidth <= 768 && sidebarHistoryOpen) {
+        history.back();
+        return;
+    }
 
     sidebar.classList.remove("sidebar-open");
     app.classList.remove("sidebar-visible");
@@ -634,6 +646,17 @@ function closeSidebar() {
 function openSidebar() {
     if (!sidebar || !app) return;
 
+    // Add a history entry when opening the mobile menu.
+    if (window.innerWidth <= 768 && !sidebarHistoryOpen) {
+        history.pushState(
+            { mobileSidebar: true },
+            "",
+            window.location.pathname + "#menu"
+        );
+
+        sidebarHistoryOpen = true;
+    }
+
     sidebar.classList.add("sidebar-open");
     app.classList.add("sidebar-visible");
 
@@ -645,63 +668,62 @@ function openSidebar() {
 function toggleSidebar() {
     if (!sidebar || !app) return;
 
-    const isOpen = app.classList.contains("sidebar-visible");
-
-    if (isOpen) {
+    if (app.classList.contains("sidebar-visible")) {
         closeSidebar();
     } else {
         openSidebar();
     }
 }
 
-// On mobile, start with the menu closed.
-// On desktop, keep the sidebar open.
+// Start with the sidebar closed on mobile.
 if (sidebar && app) {
     if (window.innerWidth <= 768) {
-        closeSidebar();
+        sidebar.classList.remove("sidebar-open");
+        app.classList.remove("sidebar-visible");
     } else {
         openSidebar();
     }
 }
 
+// Menu button
 if (sidebarToggle) {
     sidebarToggle.addEventListener("click", toggleSidebar);
 }
 
-if (sidebarCloseBtn) {
-    sidebarCloseBtn.addEventListener("click", closeSidebar);
-}
+// Android/browser Back button
+window.addEventListener("popstate", function () {
+    if (!sidebarHistoryOpen) return;
 
-// Close the mobile menu when tapping outside it.
-document.addEventListener("click", function (event) {
-    if (!sidebar || !sidebarToggle) return;
-    if (window.innerWidth > 768) return;
+    sidebarHistoryOpen = false;
 
-    const isOpen = app.classList.contains("sidebar-visible");
+    sidebar.classList.remove("sidebar-open");
+    app.classList.remove("sidebar-visible");
 
-    if (!isOpen) return;
-
-    if (
-        !sidebar.contains(event.target) &&
-        !sidebarToggle.contains(event.target)
-    ) {
-        closeSidebar();
+    if (sidebarToggle) {
+        sidebarToggle.setAttribute("aria-expanded", "false");
     }
 });
 
-// Close the menu with the Escape key.
+// Close the menu with Escape on a keyboard.
 document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
         closeSidebar();
     }
 });
 
-// Keep the sidebar open on desktop and closed on mobile after resizing.
+// Handle screen resizing.
 window.addEventListener("resize", function () {
     if (window.innerWidth > 768) {
-        openSidebar();
+        sidebarHistoryOpen = false;
+        sidebar.classList.add("sidebar-open");
+        app.classList.add("sidebar-visible");
     } else {
-        closeSidebar();
+        sidebar.classList.remove("sidebar-open");
+        app.classList.remove("sidebar-visible");
+
+        if (sidebarToggle) {
+            sidebarToggle.setAttribute("aria-expanded", "false");
+        }
     }
 });
 
