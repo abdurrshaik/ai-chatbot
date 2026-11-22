@@ -412,24 +412,33 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function readImageAsDataURL(file) {
-        return new Promise(function (resolve, reject) {
-            const reader = new FileReader();
+    return new Promise(function (resolve, reject) {
+        if (!(file instanceof Blob)) {
+            reject(new Error("The selected item is not a valid file."));
+            return;
+        }
 
-            reader.onload = function () {
-                if (typeof reader.result === "string") {
-                    resolve(reader.result);
-                } else {
-                    reject(new Error("Could not read image."));
-                }
-            };
+        const reader = new FileReader();
 
-            reader.onerror = function () {
-                reject(new Error("Could not read image."));
-            };
+        reader.onload = function () {
+            if (typeof reader.result === "string") {
+                resolve(reader.result);
+            } else {
+                reject(new Error("The image data could not be read."));
+            }
+        };
 
-            reader.readAsDataURL(file);
-        });
-    }
+        reader.onerror = function () {
+            reject(reader.error || new Error("The browser could not read this file."));
+        };
+
+        reader.onabort = function () {
+            reject(new Error("Reading the image was cancelled."));
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
         // Handle selected images
     async function handleSelectedFiles(fileList) {
         const files = Array.from(fileList || []);
