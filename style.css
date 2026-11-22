@@ -1889,3 +1889,41 @@ overflow: hidden;
         min-width: 120px;
     }
 }
+
+/* Mobile chat composer layout */
+@media (max-width: 600px) {
+    #chatForm {
+        display: grid;
+        grid-template-columns: 52px minmax(0, 1fr) 70px;
+        gap: 8px;
+        align-items: end;
+    }
+
+    #openVoiceBtn {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 44px;
+    }
+
+    #chatForm textarea,
+    #chatForm input {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    #chatForm textarea {
+        grid-column: 2;
+        grid-row: 2;
+        min-height: 52px;
+        max-height: 140px;
+        resize: vertical;
+    }
+
+    #chatForm button[type="submit"] {
+        grid-column: 3;
+        grid-row: 2;
+        min-width: 0;
+        width: 100%;
+    }
+}
