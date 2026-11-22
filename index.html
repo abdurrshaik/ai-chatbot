@@ -206,6 +206,9 @@
     
 
     <form class="chat-form" id="chatForm">
+        <button type="button" id="openVoiceBtn" class="voice-start">
+    🎙 Voice
+</button>
             <!-- Attachment Button and Menu -->
             <div class="attachment-wrapper">
 
@@ -285,7 +288,41 @@
         </p>
 
     </footer>
+<!-- GEMINI VOICE CHAT SCREEN -->
+<section class="voice-overlay" id="voiceOverlay" hidden>
+    <button
+        type="button"
+        class="voice-close"
+        id="voiceCloseBtn"
+        aria-label="Close voice chat"
+    >
+        ×
+    </button>
 
+    <h2 class="voice-title">Gemini Voice Chat</h2>
+
+    <p class="voice-status" id="voiceStatus" role="status">
+        Press Start to begin.
+    </p>
+
+    <div class="voice-orb" id="voiceOrb" aria-hidden="true">
+        🎙
+    </div>
+
+    <div class="voice-controls">
+        <button type="button" class="voice-start" id="voiceStartBtn">
+            Start
+        </button>
+
+        <button type="button" id="voiceMuteBtn" disabled>
+            Mute
+        </button>
+
+        <button type="button" id="voiceStopBtn" disabled>
+            Stop
+        </button>
+    </div>
+</section>
 </main>
 
 
