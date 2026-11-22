@@ -1,6 +1,6 @@
 {
-  "name": "AI Chatbot",
-  "short_name": "AI Chatbot",
+  "name": "AI Astra",
+"short_name": "AI Astra",
   "description": "Your personal AI assistant",
   "start_url": "./",
   "scope": "./",
