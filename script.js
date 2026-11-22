@@ -1835,12 +1835,17 @@ document.addEventListener("DOMContentLoaded", function () {
 // ANDROID KEYBOARD INPUT POSITION
 // =====================================
 
+// =====================================
+// ANDROID KEYBOARD INPUT POSITION
+// =====================================
+
 (function () {
     const viewport = window.visualViewport;
+    const inputArea = document.querySelector(".input-area");
 
-    if (!viewport) return;
+    if (!viewport || !inputArea) return;
 
-    function updateKeyboardPosition() {
+    function updateLayout() {
         const keyboardHeight = Math.max(
             0,
             window.innerHeight - viewport.height - viewport.offsetTop
@@ -1850,11 +1855,24 @@ document.addEventListener("DOMContentLoaded", function () {
             "--keyboard-offset",
             keyboardHeight + "px"
         );
+
+        // Measure the complete input area, including disclaimer.
+        const inputHeight = inputArea.getBoundingClientRect().height;
+
+        document.documentElement.style.setProperty(
+            "--input-area-height",
+            inputHeight + "px"
+        );
     }
 
-    viewport.addEventListener("resize", updateKeyboardPosition);
-    viewport.addEventListener("scroll", updateKeyboardPosition);
-    window.addEventListener("resize", updateKeyboardPosition);
+    viewport.addEventListener("resize", updateLayout);
+    viewport.addEventListener("scroll", updateLayout);
+    window.addEventListener("resize", updateLayout);
 
-    updateKeyboardPosition();
+    if ("ResizeObserver" in window) {
+        const observer = new ResizeObserver(updateLayout);
+        observer.observe(inputArea);
+    }
+
+    updateLayout();
 })();
