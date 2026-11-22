@@ -1383,18 +1383,62 @@ body {
 
 }
 
+/* =====================================
+   ANDROID MOBILE CHAT LAYOUT
+===================================== */
+
 @media screen and (max-width: 768px) {
-    .input-area {
-        position: fixed !important;
-        left: 0;
-        right: 0;
-        bottom: var(--keyboard-offset, 0px);
-        width: 100%;
-        z-index: 100;
-        box-sizing: border-box;
+
+    .app {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
     }
 
     .main {
         position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .messages {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding-bottom: 12px;
+    }
+
+    .input-area {
+        position: absolute !important;
+        left: 0;
+        right: 0;
+        bottom: var(--keyboard-offset, 0px);
+
+        width: 100%;
+        flex-shrink: 0;
+        box-sizing: border-box;
+
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        padding: 10px 12px;
+        background: inherit;
+        z-index: 100;
+    }
+
+    .chat-form {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .disclaimer {
+        margin: 0;
+        padding: 3px 0;
+        text-align: center;
+        font-size: 11px;
     }
 }
