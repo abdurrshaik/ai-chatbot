@@ -1,337 +1,350 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta name="theme-color" content="#10172a">
+    <meta name="description" content="AI Chatbot — your personal AI assistant.">
+    <meta name="google-site-verification" content="tE_5_mWVO_WaxwP3iTXrBw-X40dDA-n8T3pfh5mfr5w">
 
-<meta name="theme-color" content="#10172a">
-<meta name="description" content="AI Chatbot — your personal AI assistant.">
-<meta name="google-site-verification" content="tE_5_mWVO_WaxwP3iTXrBw-X40dDA-n8T3pfh5mfr5w">
+    <title>AI Chatbot</title>
 
-<title>AI Chatbot</title>
+    <link rel="stylesheet" href="./style.css">
 
-<link rel="stylesheet" href="./style.css">
-
-<link rel="icon" type="image/png" sizes="512x512" href="./chatbot-logo.png?v=2">
-<link rel="shortcut icon" type="image/png" href="./chatbot-logo.png?v=2">
-<link rel="apple-touch-icon" href="./chatbot-logo.png?v=2">
-<link rel="manifest" href="./manifest.json">
-
-
+    <link rel="icon" type="image/png" sizes="512x512" href="./chatbot-logo.png?v=2">
+    <link rel="shortcut icon" type="image/png" href="./chatbot-logo.png?v=2">
+    <link rel="apple-touch-icon" href="./chatbot-logo.png?v=2">
+    <link rel="manifest" href="./manifest.json">
 </head>
 
 <body>
 <div class="app">
 
+    <!-- Sidebar -->
+    <aside class="sidebar">
 
-<!-- Sidebar -->
-<aside class="sidebar">
-
-    
-    
-    <!-- Logo -->
-    <div class="logo">
-        <img
-            src="./chatbot-logo.png?v=2"
-            alt="AI Chatbot logo"
-            class="logo-image"
-            onerror="this.style.display='none'; this.nextElementSibling.textContent='🤖 AI Chatbot';"
-        >
-        <span>AI Chatbot</span>
-    </div>
-
-    <!-- New Chat -->
-    <button type="button" class="new-chat" id="newChatBtn">
-        + New Chat
-    </button>
-
-    <p>Your AI Assistant</p>
-
-    <!-- Chat History -->
-    <div class="chat-history" id="chatHistory"></div>
-
-</aside>
-
-<!-- Main Chat Area -->
-<main class="main">
-
-    <!-- Header -->
-    <header class="header">
-
-        <button
-            type="button"
-            class="sidebar-toggle"
-            id="sidebarToggle"
-            aria-label="Toggle sidebar"
-            aria-expanded="true"
-        >☰</button>
-
-        <img
-            src="./chatbot-logo.png?v=2"
-            alt="AI Chatbot logo"
-            class="header-logo"
-        >
-
-        <span class="header-title">AI Chatbot</span>
-
-        <!-- Top-right Account Buttons -->
-        <div class="header-auth">
-            <button type="button" id="openSignInBtn">
-                Sign In
-            </button>
-
-            <button type="button" id="openLoginBtn">
-                Log In
-            </button>
-        </div>
-
-    </header>
-
-    <!-- Login Popup -->
-    <div class="auth-modal" id="authModal" hidden>
-
-        <div
-            class="auth-box"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="authTitle"
-        >
-
-            <!-- Close Button -->
-            <button
-                type="button"
-                class="auth-close"
-                id="closeAuthBtn"
-                aria-label="Close"
-            >×</button>
-
-            <!-- Popup Logo -->
+        <!-- Logo -->
+        <div class="logo">
             <img
                 src="./chatbot-logo.png?v=2"
                 alt="AI Chatbot logo"
-                class="auth-logo"
+                class="logo-image"
+                onerror="this.style.display='none'; this.nextElementSibling.textContent='🤖 AI Chatbot';"
+            >
+            <span>AI Chatbot</span>
+        </div>
+
+        <!-- New Chat -->
+        <button type="button" class="new-chat" id="newChatBtn">
+            + New Chat
+        </button>
+
+        <p>Your AI Assistant</p>
+
+        <!-- Chat History -->
+        <div class="chat-history" id="chatHistory"></div>
+
+    </aside>
+
+    <!-- Main Chat Area -->
+    <main class="main">
+
+        <!-- Header -->
+        <header class="header">
+
+            <button
+                type="button"
+                class="sidebar-toggle"
+                id="sidebarToggle"
+                aria-label="Toggle sidebar"
+                aria-expanded="true"
+            >☰</button>
+
+            <img
+                src="./chatbot-logo.png?v=2"
+                alt="AI Chatbot logo"
+                class="header-logo"
             >
 
-            <h2 id="authTitle">Welcome to AI Chatbot</h2>
+            <span class="header-title">AI Chatbot</span>
 
-            <p id="authDescription">
-                Sign in or create your account to continue.
-            </p>
+            <!-- Top-right Account Buttons -->
+            <div class="header-auth">
+                <button type="button" id="openSignInBtn">
+                    Sign In
+                </button>
 
-            <!-- Logged-out View -->
-            <div id="loggedOutView">
+                <button type="button" id="openLoginBtn">
+                    Log In
+                </button>
+            </div>
 
-                <form id="authForm">
+        </header>
 
-                    <label for="authEmail">Email address</label>
+        <!-- Login Popup -->
+        <div class="auth-modal" id="authModal" hidden>
 
-                    <input
-                        type="email"
-                        id="authEmail"
-                        placeholder="Enter your email"
-                        autocomplete="email"
-                        required
-                    >
+            <div
+                class="auth-box"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="authTitle"
+            >
 
-                    <label for="authPassword">Password</label>
+                <!-- Close Button -->
+                <button
+                    type="button"
+                    class="auth-close"
+                    id="closeAuthBtn"
+                    aria-label="Close"
+                >×</button>
 
-                    <input
-                        type="password"
-                        id="authPassword"
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                        minlength="6"
-                        required
-                    >
+                <!-- Popup Logo -->
+                <img
+                    src="./chatbot-logo.png?v=2"
+                    alt="AI Chatbot logo"
+                    class="auth-logo"
+                >
+
+                <h2 id="authTitle">Welcome to AI Chatbot</h2>
+
+                <p id="authDescription">
+                    Sign in or create your account to continue.
+                </p>
+
+                <!-- Logged-out View -->
+                <div id="loggedOutView">
+
+                    <form id="authForm">
+
+                        <label for="authEmail">Email address</label>
+
+                        <input
+                            type="email"
+                            id="authEmail"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required
+                        >
+
+                        <label for="authPassword">Password</label>
+
+                        <input
+                            type="password"
+                            id="authPassword"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            minlength="6"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="signUpBtn"
+                            class="auth-create-btn"
+                        >Create Account</button>
+
+                        <button
+                            type="submit"
+                            id="loginBtn"
+                            class="auth-login-btn"
+                        >Log In</button>
+
+                    </form>
+
+                </div>
+
+                <!-- Logged-in View -->
+                <div id="loggedInView" hidden>
+
+                    <p>You are logged in!</p>
+
+                    <p id="userEmail"></p>
 
                     <button
                         type="button"
-                        id="signUpBtn"
-                        class="auth-create-btn"
-                    >Create Account</button>
-
-                    <button
-                        type="submit"
-                        id="loginBtn"
+                        id="logoutBtn"
                         class="auth-login-btn"
-                    >Log In</button>
+                    >Log Out</button>
 
-                </form>
-
-            </div>
-
-            <!-- Logged-in View -->
-            <div id="loggedInView" hidden>
-
-                <p>You are logged in!</p>
-
-                <p id="userEmail"></p>
-
-                <button
-                    type="button"
-                    id="logoutBtn"
-                    class="auth-login-btn"
-                >Log Out</button>
-
-            </div>
-
-            <!-- Account Status -->
-            <p id="authStatus" role="status" aria-live="polite"></p>
-
-        </div>
-
-    </div>
-
-    <!-- Messages -->
-    <section class="messages" id="messages">
-
-        <div class="welcome" id="welcome">
-            <h1>Welcome to AI Chatbot</h1>
-            <p>Ask a question to get started.</p>
-        </div>
-
-    </section>
-
-    <!-- Input Area -->
-    <footer class="input-area">
-
-    <!-- Selected image previews appear above the input bar -->
-    
-
-    <form class="chat-form" id="chatForm">
-        <button type="button" id="openVoiceBtn" class="voice-start">
-    🎙 Voice
-</button>
-            <!-- Attachment Button and Menu -->
-            <div class="attachment-wrapper">
-
-                <button
-                    type="button"
-                    class="attach-button"
-                    id="attachBtn"
-                    aria-label="Add attachments"
-                    aria-expanded="false"
-                >+</button>
-
-                <div
-                    class="attachment-menu"
-                    id="attachmentMenu"
-                    hidden
-                >
-                    <button type="button" id="cameraOption">
-                        📷 Camera
-                    </button>
-
-                    <button type="button" id="photosOption">
-                        🖼️ Photos
-                    </button>
-
-                    <button type="button" id="filesOption">
-                        📁 Files
-                    </button>
                 </div>
 
+                <!-- Account Status -->
+                <p id="authStatus" role="status" aria-live="polite"></p>
+
             </div>
 
-            <!-- Camera Input -->
-            <input
-                type="file"
-                id="cameraInput"
-                accept="image/*"
-                capture="environment"
-                hidden
+        </div>
+
+        <!-- Messages -->
+        <section class="messages" id="messages">
+
+            <div class="welcome" id="welcome">
+                <h1>Welcome to AI Chatbot</h1>
+                <p>Ask a question to get started.</p>
+            </div>
+
+        </section>
+
+        <!-- Input Area -->
+        <footer class="input-area">
+
+            <!-- Selected image previews appear above the input bar -->
+
+            <form class="chat-form" id="chatForm">
+
+                <!-- Attachment Button and Menu -->
+                <div class="attachment-wrapper">
+
+                    <button
+                        type="button"
+                        class="attach-button"
+                        id="attachBtn"
+                        aria-label="Add attachments"
+                        aria-expanded="false"
+                    >+</button>
+
+                    <div
+                        class="attachment-menu"
+                        id="attachmentMenu"
+                        hidden
+                    >
+                        <button type="button" id="cameraOption">
+                            📷 Camera
+                        </button>
+
+                        <button type="button" id="photosOption">
+                            🖼️ Photos
+                        </button>
+
+                        <button type="button" id="filesOption">
+                            📁 Files
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Camera Input -->
+                <input
+                    type="file"
+                    id="cameraInput"
+                    accept="image/*"
+                    capture="environment"
+                    hidden
+                >
+
+                <!-- Photo Gallery Input -->
+                <input
+                    type="file"
+                    id="photosInput"
+                    accept="image/*"
+                    multiple
+                    hidden
+                >
+
+                <!-- File Picker Input -->
+                <input
+                    type="file"
+                    id="filesInput"
+                    multiple
+                    hidden
+                >
+
+                <!-- Message Box -->
+                <textarea
+                    class="chat-input"
+                    id="userInput"
+                    placeholder="Ask me anything..."
+                    autocomplete="off"
+                    rows="1"
+                    required
+                ></textarea>
+
+                <!-- Voice Button -->
+                <button
+                    type="button"
+                    id="openVoiceBtn"
+                    class="voice-start"
+                    aria-label="Open voice chat"
+                    title="Voice chat"
+                >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z"/>
+                        <path d="M19 11a7 7 0 0 1-14 0M12 18v4m-4 0h8"/>
+                    </svg>
+                </button>
+
+                <!-- Send Button -->
+                <button
+                    type="submit"
+                    class="send-button"
+                    aria-label="Send message"
+                    title="Send message"
+                >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 19V5M5 12l7-7 7 7"/>
+                    </svg>
+                </button>
+
+            </form>
+
+            <p class="disclaimer">
+                AI can make mistakes. Check important information.
+            </p>
+
+        </footer>
+
+        <!-- GEMINI VOICE CHAT SCREEN -->
+        <section class="voice-overlay" id="voiceOverlay" hidden>
+
+            <button
+                type="button"
+                class="voice-close"
+                id="voiceCloseBtn"
+                aria-label="Close voice chat"
             >
-
-            <!-- Photo Gallery Input -->
-            <input
-                type="file"
-                id="photosInput"
-                accept="image/*"
-                multiple
-                hidden
-            >
-
-            <!-- File Picker Input -->
-            <input
-                type="file"
-                id="filesInput"
-                multiple
-                hidden
-            >
-
-            <!-- Message Box -->
-            <textarea
-                class="chat-input"
-                id="userInput"
-                placeholder="Ask me anything..."
-                autocomplete="off"
-                rows="1"
-                required
-            ></textarea>
-
-            <!-- Send Button -->
-            <button type="submit" class="send-button">
-                Send
+                ×
             </button>
 
-        </form>
+            <h2 class="voice-title">Gemini Voice Chat</h2>
 
-        <p class="disclaimer">
-            AI can make mistakes. Check important information.
-        </p>
+            <p class="voice-status" id="voiceStatus" role="status">
+                Press Start to begin.
+            </p>
 
-    </footer>
-<!-- GEMINI VOICE CHAT SCREEN -->
-<section class="voice-overlay" id="voiceOverlay" hidden>
-    <button
-        type="button"
-        class="voice-close"
-        id="voiceCloseBtn"
-        aria-label="Close voice chat"
-    >
-        ×
-    </button>
+            <div class="voice-orb" id="voiceOrb" aria-hidden="true">
+                🎙
+            </div>
 
-    <h2 class="voice-title">Gemini Voice Chat</h2>
+            <div class="voice-controls">
 
-    <p class="voice-status" id="voiceStatus" role="status">
-        Press Start to begin.
-    </p>
+                <button type="button" class="voice-start" id="voiceStartBtn">
+                    Start
+                </button>
 
-    <div class="voice-orb" id="voiceOrb" aria-hidden="true">
-        🎙
-    </div>
+                <button type="button" id="voiceMuteBtn" disabled>
+                    Mute
+                </button>
 
-    <div class="voice-controls">
-        <button type="button" class="voice-start" id="voiceStartBtn">
-            Start
-        </button>
+                <button type="button" id="voiceStopBtn" disabled>
+                    Stop
+                </button>
 
-        <button type="button" id="voiceMuteBtn" disabled>
-            Mute
-        </button>
+            </div>
 
-        <button type="button" id="voiceStopBtn" disabled>
-            Stop
-        </button>
-    </div>
-</section>
-</main>
+        </section>
 
+    </main>
 
 </div>
 
 <!-- Markdown and HTML Sanitization -->
-
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
 
 <!-- Chatbot and Firebase Functionality -->
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
 <script type="module" src="./script.js"></script>
 
 </body>
