@@ -1512,35 +1512,26 @@ body {
     color: var(--astra-muted);
 }
 
-/* Blue glow appears only on the welcome screen */
-.messages:has(.welcome:not([hidden]))::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: -100px;
-    transform: translateX(-50%);
-    width: min(700px, 100%);
-    height: 300px;
-    background: radial-gradient(
-        ellipse at center,
-        rgba(37, 99, 235, 0.38) 0%,
-        rgba(37, 99, 235, 0.14) 45%,
-        transparent 75%
-    );
-    pointer-events: none;
-    z-index: 0;
+/* =========================================
+   AI ASTRA - WELCOME SCREEN BLUE GLOW
+========================================= */
+
+.main:has(.welcome:not([hidden])) {
+    background:
+        radial-gradient(
+            ellipse 100% 55% at 50% 110%,
+            rgba(37, 99, 255, 0.68) 0%,
+            rgba(28, 68, 190, 0.42) 38%,
+            rgba(17, 35, 95, 0.18) 62%,
+            transparent 82%
+        ),
+        #0b0d12;
 }
 
-.welcome {
-    position: relative;
-    z-index: 1;
+.main:has(.welcome:not([hidden])) .messages,
+.main:has(.welcome:not([hidden])) .input-area {
+    background: transparent;
 }
-
-.messages > .message {
-    position: relative;
-    z-index: 1;
-}
-
 /* Chat messages */
 .user-message {
     background: #2563eb;
