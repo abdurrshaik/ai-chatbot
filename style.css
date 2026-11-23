@@ -1470,3 +1470,163 @@ body {
     border-radius: 50%;
     display: block;
 }
+
+/* =========================================
+   AI ASTRA - DARK THEME
+========================================= */
+
+:root {
+    color-scheme: dark;
+    --astra-bg: #0b0d12;
+    --astra-panel: #151821;
+    --astra-border: #292e3a;
+    --astra-text: #f3f4f6;
+    --astra-muted: #9ca3af;
+    --astra-blue: #3b82f6;
+}
+
+body {
+    background: var(--astra-bg);
+    color: var(--astra-text);
+}
+
+.main,
+.messages {
+    background: var(--astra-bg);
+}
+
+.header {
+    background: var(--astra-bg);
+    border-bottom-color: var(--astra-border);
+}
+
+.header h1,
+.header h2,
+.header-title,
+.welcome h1 {
+    color: var(--astra-text);
+}
+
+.welcome p,
+.disclaimer {
+    color: var(--astra-muted);
+}
+
+/* Blue glow appears only on the welcome screen */
+.messages:has(.welcome:not([hidden]))::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -100px;
+    transform: translateX(-50%);
+    width: min(700px, 100%);
+    height: 300px;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(37, 99, 235, 0.38) 0%,
+        rgba(37, 99, 235, 0.14) 45%,
+        transparent 75%
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+.welcome {
+    position: relative;
+    z-index: 1;
+}
+
+.messages > .message {
+    position: relative;
+    z-index: 1;
+}
+
+/* Chat messages */
+.user-message {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.bot-message {
+    background: var(--astra-panel);
+    color: var(--astra-text);
+}
+
+/* Input area */
+.input-area {
+    background: var(--astra-bg);
+}
+
+.chat-form,
+#chatForm {
+    background: var(--astra-panel);
+    border: 1px solid var(--astra-border);
+    border-radius: 18px;
+}
+
+.chat-input,
+#userInput,
+.chat-form textarea,
+.chat-form input[type="text"] {
+    background: var(--astra-panel);
+    color: var(--astra-text);
+    border-color: var(--astra-border);
+}
+
+.chat-input::placeholder,
+#userInput::placeholder {
+    color: var(--astra-muted);
+}
+
+/* Header buttons */
+.header-actions button,
+#openSignInBtn,
+#openLoginBtn,
+#logoutBtn {
+    background: var(--astra-panel);
+    color: var(--astra-text);
+    border-color: var(--astra-border);
+}
+
+.header-actions button:hover,
+#openSignInBtn:hover,
+#openLoginBtn:hover {
+    background: #222735;
+}
+
+/* Attachment menu */
+.attachment-menu:not([hidden]),
+#attachmentMenu:not([hidden]) {
+    background: var(--astra-panel);
+    border-color: var(--astra-border);
+}
+
+/* Sign-in popup */
+.auth-box {
+    background: var(--astra-panel);
+    color: var(--astra-text);
+    border-color: var(--astra-border);
+}
+
+.auth-box h2,
+.auth-box label {
+    color: var(--astra-text);
+}
+
+.auth-box input[type="email"],
+.auth-box input[type="password"] {
+    background: #0b0d12;
+    color: var(--astra-text);
+    border-color: var(--astra-border);
+}
+
+.auth-box .auth-create-btn {
+    background: transparent;
+    color: #93c5fd;
+    border-color: var(--astra-blue);
+}
+
+.auth-box .auth-close {
+    background: #222735;
+    color: var(--astra-text);
+   }
