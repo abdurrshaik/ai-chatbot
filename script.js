@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const authModal = document.getElementById("authModal");
     const openSignInBtn = document.getElementById("openSignInBtn");
     const openLoginBtn = document.getElementById("openLoginBtn");
+    const headerProfileBtn = document.getElementById("headerProfileBtn");
+    const sidebarProfileBtn = document.getElementById("sidebarProfileBtn");
     const closeAuthBtn = document.getElementById("closeAuthBtn");
     const authTitle = document.getElementById("authTitle");
     const authDescription = document.getElementById("authDescription");
