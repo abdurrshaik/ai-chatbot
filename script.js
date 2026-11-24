@@ -31,6 +31,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const headerProfileAvatar = document.querySelector("#headerProfileBtn .profile-avatar");
     const sidebarProfileAvatar = document.querySelector("#sidebarProfileBtn .profile-avatar");
     const authStatus = document.getElementById("authStatus");
+    // Profile screen elements
+    const profileModal = document.getElementById("profileModal");
+    const profileCloseBtn = document.getElementById("profileCloseBtn");
+    const profileName = document.getElementById("profileName");
+    const profileEmail = document.getElementById("profileEmail");
+    const profileAvatar = document.getElementById("profileAvatar");
+    const profileLogoutBtn = document.getElementById("profileLogoutBtn");
+    const openSettingsBtn = document.getElementById("openSettingsBtn");
+    const profileStatus = document.getElementById("profileStatus");
 
     function openAuthPopup(title, description) {
         if (!authModal) return;
@@ -45,12 +54,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     function openProfile() {
-    const profileModal = document.getElementById("profileModal");
+    if (!profileModal) return;
 
+    if (profileStatus) {
+        profileStatus.textContent = "";
+    }
+
+    profileModal.hidden = false;
+}
+
+function closeProfile() {
     if (profileModal) {
-        profileModal.hidden = false;
+        profileModal.hidden = true;
     }
-    }
+}
+
+if (profileCloseBtn) {
+    profileCloseBtn.addEventListener("click", closeProfile);
+}
+
+if (profileModal) {
+    profileModal.addEventListener("click", function (event) {
+        if (event.target === profileModal) {
+            closeProfile();
+        }
+    });
+}
 
 if (headerProfileBtn) {
     headerProfileBtn.addEventListener("click", openProfile);
@@ -251,38 +280,169 @@ if (sidebarProfileBtn) {
             }
         });
     }
+        // Log out from the profile screen.
+if (profileLogoutBtn) {
+    profileLogoutBtn.addEventListener("click", async function () {
+        if (profileStatus) {
+            profileStatus.textContent = "Logging out...";
+        }
 
-    // Update the popup when Firebase authentication changes.
-    onAuthStateChanged(auth, function (user) {
-        if (user) {
-            if (headerProfileBtn) headerProfileBtn.hidden = false;
-            if (sidebarProfileBtn) sidebarProfileBtn.hidden = false;
-            if (openSignInBtn) openSignInBtn.hidden = true;
-            if (openLoginBtn) openLoginBtn.hidden = true;
-            if (loggedOutView) loggedOutView.hidden = true;
-            if (loggedInView) loggedInView.hidden = false;
+        try {
+            await signOut(auth);
+            closeProfile();
 
-            if (userEmail) {
-                userEmail.textContent = user.email || "Signed in";
+            if (authStatus) {
+                authStatus.textContent = "You have logged out.";
             }
+        } catch (error) {
+            console.error("Profile logout error:", error);
 
-            if (authTitle) authTitle.textContent = "Your Account";
-
-            if (authDescription) {
-                authDescription.textContent =
-                    "You are signed in to AI Astra.";
+            if (profileStatus) {
+                profileStatus.textContent =
+                    "Could not log out. Please try again.";
             }
-
-        } else {
-            if (headerProfileBtn) headerProfileBtn.hidden = true;
-            if (sidebarProfileBtn) sidebarProfileBtn.hidden = true;
-            if (openSignInBtn) openSignInBtn.hidden = false;
-            if (openLoginBtn) openLoginBtn.hidden = false;
-            if (loggedOutView) loggedOutView.hidden = false;
-            if (loggedInView) loggedInView.hidden = true;
-            if (userEmail) userEmail.textContent = "";
         }
     });
+}
+// Log out from the profile screen.
+if (profileLogoutBtn) {
+    profileLogoutBtn.addEventListener("click", async function () {
+        if (profileStatus) {
+            profileStatus.textContent = "Logging out...";
+        }
+
+        try {
+            await signOut(auth);
+            closeProfile();
+
+            if (authStatus) {
+                authStatus.textContent = "You have logged out.";
+            }
+        } catch (error) {
+            console.error("Profile logout error:", error);
+
+            if (profileStatus) {
+                profileStatus.textContent =
+                    "Could not log out. Please try again.";
+            }
+        }
+    });
+}
+
+// Settings button
+if (openSettingsBtn) {
+    openSettingsBtn.addEventListener("click", function () {
+        if (profileStatus) {
+            profileStatus.textContent =
+                "Settings screen will be added in the next step.";
+        }
+    });
+}
+
+    // Update the popup when Firebase authentication changes.
+    // Update account and profile UI when Firebase auth changes.
+onAuthStateChanged(auth, function (user) {
+    if (user) {
+        // Show profile buttons; hide Sign In and Log In.
+        if (headerProfileBtn) headerProfileBtn.hidden = false;
+        if (sidebarProfileBtn) sidebarProfileBtn.hidden = false;
+        if (openSignInBtn) openSignInBtn.hidden = true;
+        if (openLoginBtn) openLoginBtn.hidden = true;
+
+        // Update the login popup.
+        if (loggedOutView) loggedOutView.hidden = true;
+        if (loggedInView) loggedInView.hidden = false;
+
+        if (userEmail) {
+            userEmail.textContent = user.email || "Signed in";
+        }
+
+        if (authTitle) authTitle.textContent = "Your Account";
+
+        if (authDescription) {
+            authDescription.textContent =
+                "You are signed in to AI Astra.";
+        }
+
+        // Fill in the profile name and email.
+        const email = user.email || "";
+        const name =
+            user.displayName ||
+            (email ? email.split("@")[0] : "AI Astra User");
+
+        if (profileName) {
+            profileName.textContent = name;
+        }
+
+        if (profileEmail) {
+            profileEmail.textContent = email;
+        }
+
+        // Show the user's photo, or their first initial.
+        const initial = name.trim().charAt(0).toUpperCase() || "👤";
+
+        [headerProfileAvatar, sidebarProfileAvatar].forEach(
+            function (avatar) {
+                if (!avatar) return;
+
+                if (user.photoURL) {
+                    avatar.textContent = "";
+                    avatar.style.backgroundImage =
+                        `url("${user.photoURL}")`;
+                    avatar.style.backgroundSize = "cover";
+                    avatar.style.backgroundPosition = "center";
+                } else {
+                    avatar.style.backgroundImage = "none";
+                    avatar.textContent = initial;
+                }
+            }
+        );
+
+        if (profileAvatar) {
+            if (user.photoURL) {
+                profileAvatar.textContent = "";
+                profileAvatar.style.backgroundImage =
+                    `url("${user.photoURL}")`;
+                profileAvatar.style.backgroundSize = "cover";
+                profileAvatar.style.backgroundPosition = "center";
+            } else {
+                profileAvatar.style.backgroundImage = "none";
+                profileAvatar.textContent = initial;
+            }
+        }
+
+    } else {
+        // Hide profile buttons; show Sign In and Log In.
+        if (headerProfileBtn) headerProfileBtn.hidden = true;
+        if (sidebarProfileBtn) sidebarProfileBtn.hidden = true;
+        if (openSignInBtn) openSignInBtn.hidden = false;
+        if (openLoginBtn) openLoginBtn.hidden = false;
+
+        // Reset the login popup.
+        if (loggedOutView) loggedOutView.hidden = false;
+        if (loggedInView) loggedInView.hidden = true;
+        if (userEmail) userEmail.textContent = "";
+
+        // Clear profile information.
+        if (profileName) profileName.textContent = "Your Profile";
+        if (profileEmail) profileEmail.textContent = "";
+        if (profileAvatar) {
+            profileAvatar.style.backgroundImage = "none";
+            profileAvatar.textContent = "👤";
+        }
+
+        [headerProfileAvatar, sidebarProfileAvatar].forEach(
+            function (avatar) {
+                if (!avatar) return;
+
+                avatar.style.backgroundImage = "none";
+                avatar.textContent = "👤";
+            }
+        );
+
+        closeProfile();
+    }
+});
 
 
     // =========================================
