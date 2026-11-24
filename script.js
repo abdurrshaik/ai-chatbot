@@ -41,6 +41,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (authEmail) authEmail.focus();
     }
+    function openProfile() {
+    openAuthPopup("Your Account", "Your AI Astra profile.");
+}
+
+if (headerProfileBtn) {
+    headerProfileBtn.addEventListener("click", openProfile);
+}
+
+if (sidebarProfileBtn) {
+    sidebarProfileBtn.addEventListener("click", openProfile);
+}
 
     if (openSignInBtn) {
         openSignInBtn.addEventListener("click", function () {
