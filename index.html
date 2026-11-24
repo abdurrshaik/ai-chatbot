@@ -193,6 +193,55 @@
 
         </div>
 
+        <!-- Profile Screen -->
+        <div class="auth-modal" id="profileModal" hidden>
+
+            <div
+                class="auth-box profile-box"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="profileTitle"
+            >
+
+                <!-- Close Button -->
+                <button
+                    type="button"
+                    class="auth-close"
+                    id="profileCloseBtn"
+                    aria-label="Close profile"
+                >×</button>
+
+                <h2 id="profileTitle">Your Profile</h2>
+
+                <!-- Profile Avatar -->
+                <div class="profile-avatar-large" id="profileAvatar">
+                    👤
+                </div>
+
+                <!-- User Information -->
+                <p id="profileName">Your Name</p>
+                <p id="profileEmail"></p>
+
+                <!-- Profile Actions -->
+                <button
+                    type="button"
+                    class="auth-login-btn"
+                    id="openSettingsBtn"
+                >Settings</button>
+
+                <button
+                    type="button"
+                    class="auth-create-btn"
+                    id="profileLogoutBtn"
+                >Log Out</button>
+
+                <!-- Profile Status -->
+                <p id="profileStatus" role="status" aria-live="polite"></p>
+
+            </div>
+
+        </div>
+
         <!-- Messages -->
         <section class="messages" id="messages">
 
