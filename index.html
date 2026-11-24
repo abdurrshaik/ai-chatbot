@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,15 +25,16 @@
     <aside class="sidebar">
 
         <!-- AI Astra Logo -->
-<div class="logo">
-    <img
-        src="./chatbot-logo.png?v=2"
-        alt="AI Astra logo"
-        class="logo-image"
-        onerror="this.style.display='none'; this.nextElementSibling.textContent='🤖 AI Astra';"
-    >
-    <span>AI Astra</span>
-</div>
+        <div class="logo">
+            <img
+                src="./chatbot-logo.png?v=2"
+                alt="AI Astra logo"
+                class="logo-image"
+                onerror="this.style.display='none'; this.nextElementSibling.textContent='🤖 AI Astra';"
+            >
+            <span>AI Astra</span>
+        </div>
+
         <!-- New Chat -->
         <button type="button" class="new-chat" id="newChatBtn">
             + New Chat
@@ -44,15 +44,18 @@
 
         <!-- Chat History -->
         <div class="chat-history" id="chatHistory"></div>
-<button
-    type="button"
-    class="sidebar-profile"
-    id="sidebarProfileBtn"
-    hidden
->
-    <span class="profile-avatar">👤</span>
-    <span>Profile</span>
-</button>
+
+        <!-- Sidebar Profile Button -->
+        <button
+            type="button"
+            class="sidebar-profile"
+            id="sidebarProfileBtn"
+            hidden
+        >
+            <span class="profile-avatar">👤</span>
+            <span>Profile</span>
+        </button>
+
     </aside>
 
     <!-- Main Chat Area -->
@@ -79,16 +82,18 @@
 
             <!-- Top-right Account Buttons -->
             <div class="header-auth">
-    <button type="button" id="openSignInBtn">Sign In</button>
-    <button type="button" id="openLoginBtn">Log In</button>
+                <button type="button" id="openSignInBtn">Sign In</button>
+                <button type="button" id="openLoginBtn">Log In</button>
 
-    <button
-        type="button"
-        id="headerProfileBtn"
-        class="header-profile"
-        hidden
-        aria-label="Open profile"
-    >👤</button>
+                <button
+                    type="button"
+                    id="headerProfileBtn"
+                    class="header-profile"
+                    hidden
+                    aria-label="Open profile"
+                >
+                    <span class="profile-avatar">👤</span>
+                </button>
             </div>
 
         </header>
