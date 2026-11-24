@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const loggedOutView = document.getElementById("loggedOutView");
     const loggedInView = document.getElementById("loggedInView");
     const userEmail = document.getElementById("userEmail");
+    const headerProfileAvatar = document.querySelector("#headerProfileBtn .profile-avatar");
+    const sidebarProfileAvatar = document.querySelector("#sidebarProfileBtn .profile-avatar");
     const authStatus = document.getElementById("authStatus");
 
     function openAuthPopup(title, description) {
