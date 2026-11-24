@@ -1621,3 +1621,66 @@ body {
     background: #222735;
     color: var(--astra-text);
    }
+
+/* ==============================
+   PROFILE SCREEN
+============================== */
+
+.profile-box {
+    text-align: center;
+}
+
+.profile-avatar-large {
+    width: 84px;
+    height: 84px;
+    margin: 16px auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #e5e7eb;
+    color: #374151;
+    font-size: 32px;
+    font-weight: 600;
+    background-size: cover;
+    background-position: center;
+}
+
+#profileName {
+    margin: 8px 0 4px;
+    font-size: 18px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+#profileEmail {
+    margin: 0 0 20px;
+    color: #6b7280;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+#profileStatus {
+    min-height: 20px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* Small profile avatars in the header and sidebar */
+#headerProfileBtn .profile-avatar,
+#sidebarProfileBtn .profile-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #e5e7eb;
+    color: #374151;
+    background-size: cover;
+    background-position: center;
+    font-weight: 600;
+}
