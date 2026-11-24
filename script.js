@@ -248,6 +248,10 @@ if (sidebarProfileBtn) {
     // Update the popup when Firebase authentication changes.
     onAuthStateChanged(auth, function (user) {
         if (user) {
+            if (headerProfileBtn) headerProfileBtn.hidden = false;
+            if (sidebarProfileBtn) sidebarProfileBtn.hidden = false;
+            if (openSignInBtn) openSignInBtn.hidden = true;
+            if (openLoginBtn) openLoginBtn.hidden = true;
             if (loggedOutView) loggedOutView.hidden = true;
             if (loggedInView) loggedInView.hidden = false;
 
@@ -263,6 +267,10 @@ if (sidebarProfileBtn) {
             }
 
         } else {
+            if (headerProfileBtn) headerProfileBtn.hidden = true;
+            if (sidebarProfileBtn) sidebarProfileBtn.hidden = true;
+            if (openSignInBtn) openSignInBtn.hidden = false;
+            if (openLoginBtn) openLoginBtn.hidden = false;
             if (loggedOutView) loggedOutView.hidden = false;
             if (loggedInView) loggedInView.hidden = true;
             if (userEmail) userEmail.textContent = "";
