@@ -43,9 +43,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (authEmail) authEmail.focus();
     }
+    
     function openProfile() {
-    openAuthPopup("Your Account", "Your AI Astra profile.");
-}
+    const profileModal = document.getElementById("profileModal");
+
+    if (profileModal) {
+        profileModal.hidden = false;
+    }
+    }
 
 if (headerProfileBtn) {
     headerProfileBtn.addEventListener("click", openProfile);
