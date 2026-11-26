@@ -1421,6 +1421,22 @@ updateKeyboardPosition();
             }];
 
             const response = await fetch(API_URL, {
+                // Check whether the user is asking about weather
+const asksWeather = /\b(weather|temperature|rain|forecast|wind|humidity)\b/i
+    .test(latestMessage.text || "");
+
+let weather = null;
+
+if (asksWeather) {
+    try {
+        weather = await getCurrentWeather();
+    } catch (error) {
+        console.warn("Weather lookup failed:", error);
+        weather = {
+            error: "Weather unavailable. Location permission may be denied."
+        };
+    }
+}
     method: "POST",
     headers: {
         "Content-Type": "application/json"
@@ -1921,7 +1937,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     },
                     body: JSON.stringify({
     message: latestMessage.text || "Please describe the attached image.",
-    currentDateTime: getDeviceDateTime()
+    currentDateTime: getDeviceDateTime(),
+    weather: weather
 })
                 }
             );
