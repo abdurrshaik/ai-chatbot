@@ -11,6 +11,34 @@ document.addEventListener("DOMContentLoaded", function () {
 function getDeviceDateTime() {
     return new Date().toLocaleString();
 }
+    async function getCurrentWeather() {
+    if (!navigator.geolocation) {
+        throw new Error("Location is not supported.");
+    }
+
+    const position = await new Promise(function (resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    const url =
+        "https://api.open-meteo.com/v1/forecast" +
+        "?latitude=" + latitude +
+        "&longitude=" + longitude +
+        "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m" +
+        "&timezone=auto";
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!response.ok || !data.current) {
+        throw new Error("Could not get weather data.");
+    }
+
+    return data.current;
+}
     // =========================================
     // FIREBASE AUTHENTICATION ELEMENTS
     // =========================================
