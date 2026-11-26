@@ -1891,7 +1891,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({})
+                    body: JSON.stringify({
+    message: latestMessage.text || "Please describe the attached image.",
+    currentDateTime: getDeviceDateTime()
+})
                 }
             );
 
