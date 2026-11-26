@@ -7,6 +7,10 @@ import {
 } from "./firebase.js";
 
 document.addEventListener("DOMContentLoaded", function () {
+    // Current date and time from the user's device
+function getDeviceDateTime() {
+    return new Date().toLocaleString();
+}
     // =========================================
     // FIREBASE AUTHENTICATION ELEMENTS
     // =========================================
