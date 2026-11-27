@@ -1422,8 +1422,9 @@ updateKeyboardPosition();
 
             const response = await fetch(API_URL, {
                 // Check whether the user is asking about weather
-const asksWeather = /\b(weather|temperature|rain|forecast|wind|humidity)\b/i
-    .test(latestMessage.text || "");
+const asksWeather =
+    /\b(weather|temperature|rain|forecast|wind|humidity)\b/i
+        .test(latestMessage.text || "");
 
 let weather = null;
 
@@ -1437,12 +1438,16 @@ if (asksWeather) {
         };
     }
 }
+
+const response = await fetch(API_URL, {
     method: "POST",
     headers: {
         "Content-Type": "application/json"
     },
     body: JSON.stringify({
-        message: latestMessage.text || "Please describe the attached image."
+        message: latestMessage.text || "Please describe the attached image.",
+        currentDateTime: getDeviceDateTime(),
+        weather: weather
     })
 });
 
